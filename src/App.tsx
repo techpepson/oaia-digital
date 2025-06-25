@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,9 @@ import AuditorDashboard from "./pages/dashboards/AuditorDashboard";
 import CreateInvoice from "./pages/CreateInvoice";
 import InvoiceList from "./pages/contractor/InvoiceList";
 import Notifications from "./pages/contractor/Notifications";
+import AccountSettings from "./pages/contractor/AccountSettings";
+import ReportsExports from "./pages/contractor/ReportsExports";
+import AdvancesPayments from "./pages/contractor/AdvancesPayments";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +38,9 @@ const App = () => (
           <Route path="/create-invoice" element={<CreateInvoice />} />
           <Route path="/contractor/invoices" element={<InvoiceList />} />
           <Route path="/contractor/notifications" element={<Notifications />} />
+          <Route path="/contractor/settings" element={<AccountSettings />} />
+          <Route path="/contractor/reports" element={<ReportsExports />} />
+          <Route path="/contractor/advances" element={<AdvancesPayments />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
