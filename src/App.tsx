@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +17,11 @@ import AccountSettings from "./pages/contractor/AccountSettings";
 import ReportsExports from "./pages/contractor/ReportsExports";
 import AdvancesPayments from "./pages/contractor/AdvancesPayments";
 import NotFound from "./pages/NotFound";
+import PendingInvoices from "./pages/agency/PendingInvoices";
+import ApprovedInvoices from "./pages/agency/ApprovedInvoices";
+import RejectedInvoices from "./pages/agency/RejectedInvoices";
+import Payments from "./pages/agency/Payments";
+import FundRequests from "./pages/agency/FundRequests";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +45,11 @@ const App = () => (
           <Route path="/contractor/settings" element={<AccountSettings />} />
           <Route path="/contractor/reports" element={<ReportsExports />} />
           <Route path="/contractor/advances" element={<AdvancesPayments />} />
+          <Route path="/agency/payments" element={<Payments />} />
+          <Route path="/agency/fund-requests" element={<FundRequests />} />
+          <Route path="/agency/pending-invoices" element={<PendingInvoices />} />
+          <Route path="/agency/approved-invoices" element={<ApprovedInvoices />} />
+          <Route path="/agency/rejected-invoices" element={<RejectedInvoices />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
