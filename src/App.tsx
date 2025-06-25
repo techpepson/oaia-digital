@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,8 @@ import AgencyDashboard from "./pages/dashboards/AgencyDashboard";
 import MinistryDashboard from "./pages/dashboards/MinistryDashboard";
 import AuditorDashboard from "./pages/dashboards/AuditorDashboard";
 import CreateInvoice from "./pages/CreateInvoice";
+import InvoiceList from "./pages/contractor/InvoiceList";
+import Notifications from "./pages/contractor/Notifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,8 @@ const App = () => (
           <Route path="/dashboard/ministry" element={<MinistryDashboard />} />
           <Route path="/dashboard/auditor" element={<AuditorDashboard />} />
           <Route path="/create-invoice" element={<CreateInvoice />} />
+          <Route path="/contractor/invoices" element={<InvoiceList />} />
+          <Route path="/contractor/notifications" element={<Notifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
