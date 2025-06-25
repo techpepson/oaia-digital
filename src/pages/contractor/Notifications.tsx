@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import Logo from '@/components/Logo';
 import ContractorSidebar from '@/components/ContractorSidebar';
-import { CheckCircle, AlertCircle, Info, Clock, Menu, X, Bell, MarkAsUnread } from 'lucide-react';
+import { CheckCircle, AlertCircle, Info, Clock, Menu, X, Bell, Mail } from 'lucide-react';
 
 const Notifications = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -190,7 +190,7 @@ const Notifications = () => {
                           )}
                           <Button variant="ghost" size="sm">
                             {notification.read ? (
-                              <MarkAsUnread className="h-4 w-4" />
+                              <Mail className="h-4 w-4" />
                             ) : (
                               <CheckCircle className="h-4 w-4" />
                             )}
