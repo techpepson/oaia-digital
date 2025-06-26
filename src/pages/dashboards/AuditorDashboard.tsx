@@ -1,36 +1,128 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Logo from '@/components/Logo';
-import { Shield, AlertTriangle, CheckCircle, Eye, FileText } from 'lucide-react';
+import { 
+  Shield, 
+  AlertTriangle, 
+  CheckCircle, 
+  Eye, 
+  FileText, 
+  Search,
+  Filter,
+  Download,
+  BarChart3,
+  FileSearch,
+  Bell,
+  Clock,
+  DollarSign,
+  TrendingUp,
+  Users,
+  Building2,
+  Calendar,
+  Target,
+  Zap,
+  Database,
+  Settings
+} from 'lucide-react';
 
 const AuditorDashboard = () => {
-  const auditItems = [
-    { id: 'AUD001', type: 'Invoice', reference: 'INV001', agency: 'Ministry of Health', risk: 'low', status: 'reviewed' },
-    { id: 'AUD002', type: 'Payment', reference: 'PAY456', agency: 'Ministry of Education', risk: 'medium', status: 'pending' },
-    { id: 'AUD003', type: 'Contract', reference: 'CON789', agency: 'County Government', risk: 'high', status: 'flagged' },
-    { id: 'AUD004', type: 'Invoice', reference: 'INV012', agency: 'Ministry of Transport', risk: 'low', status: 'approved' }
+  const [searchTerm, setSearchTerm] = useState('');
+  const [agencyFilter, setAgencyFilter] = useState('all');
+  const [riskFilter, setRiskFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  const auditKPIs = [
+    { label: 'Flagged Invoices', value: 23, change: '+5 this week', icon: AlertTriangle, color: 'text-red-600' },
+    { label: 'Anomalies Detected', value: 8, change: 'AI flagged', icon: Zap, color: 'text-orange-600' },
+    { label: 'Total Under Review', value: 'KES 12.5M', change: '15 invoices', icon: Eye, color: 'text-blue-600' },
+    { label: 'Compliance Rate', value: '94.2%', change: '+1.8% improvement', icon: Shield, color: 'text-green-600' }
+  ];
+
+  const auditCases = [
+    {
+      id: 'AUD-2024-001',
+      title: 'Duplicate Payment Investigation',
+      agency: 'Ministry of Health',
+      priority: 'high',
+      status: 'in-progress',
+      amount: 'KES 850,000',
+      daysOpen: 12,
+      assignee: 'Senior Auditor A'
+    },
+    {
+      id: 'AUD-2024-002', 
+      title: 'Contract Variance Review',
+      agency: 'Road Fund',
+      priority: 'medium',
+      status: 'pending-review',
+      amount: 'KES 2,400,000',
+      daysOpen: 8,
+      assignee: 'Auditor Team B'
+    },
+    {
+      id: 'AUD-2024-003',
+      title: 'Budget Overrun Analysis',
+      agency: 'County Government',
+      priority: 'high',
+      status: 'completed',
+      amount: 'KES 1,200,000',
+      daysOpen: 45,
+      assignee: 'Lead Auditor C'
+    }
+  ];
+
+  const flaggedInvoices = [
+    { 
+      id: 'INV-2024-156', 
+      contractor: 'ABC Construction Ltd', 
+      agency: 'Ministry of Health',
+      amount: 'KES 450,000',
+      flag: 'Amount exceeds contract value',
+      riskLevel: 'high',
+      dateSubmitted: '2024-01-15'
+    },
+    { 
+      id: 'INV-2024-134', 
+      contractor: 'Tech Solutions Inc', 
+      agency: 'Ministry of Education',
+      amount: 'KES 125,000',
+      flag: 'Potential duplicate',
+      riskLevel: 'medium',
+      dateSubmitted: '2024-01-12'
+    },
+    { 
+      id: 'INV-2024-189', 
+      contractor: 'Road Works Ltd', 
+      agency: 'Road Fund',
+      amount: 'KES 890,000',
+      flag: 'Unusual payment pattern',
+      riskLevel: 'high',
+      dateSubmitted: '2024-01-14'
+    }
   ];
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'high': return 'bg-red-100 text-red-800 border-red-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved': return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'flagged': return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case 'pending': return <Eye className="h-4 w-4 text-yellow-500" />;
-      case 'reviewed': return <Shield className="h-4 w-4 text-blue-500" />;
-      default: return <FileText className="h-4 w-4 text-gray-500" />;
+      case 'in-progress': return 'bg-blue-100 text-blue-800';
+      case 'pending-review': return 'bg-yellow-100 text-yellow-800';
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'on-hold': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -45,6 +137,10 @@ const AuditorDashboard = () => {
           <div className="flex items-center space-x-4">
             <span className="text-sm text-oaia-gray">Auditor General's Office</span>
             <Button variant="outline" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              Audit Settings
+            </Button>
+            <Button variant="outline" size="sm">
               Logout
             </Button>
           </div>
@@ -52,135 +148,266 @@ const AuditorDashboard = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Page Title */}
+        {/* Page Title & Navigation */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Auditor Dashboard</h1>
-          <p className="text-oaia-gray mt-1">Monitor compliance and review financial transactions</p>
+          <p className="text-oaia-gray mt-1">Comprehensive audit oversight and compliance monitoring</p>
+          
+          {/* Quick Navigation */}
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button variant="outline" size="sm">
+              <FileSearch className="h-4 w-4 mr-2" />
+              Audit Cases
+            </Button>
+            <Button variant="outline" size="sm">
+              <Database className="h-4 w-4 mr-2" />
+              Invoice Registry
+            </Button>
+            <Button variant="outline" size="sm">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analytics Tools
+            </Button>
+            <Button variant="outline" size="sm">
+              <FileText className="h-4 w-4 mr-2" />
+              Audit Reports
+            </Button>
+            <Button variant="outline" size="sm">
+              <Bell className="h-4 w-4 mr-2" />
+              Notifications
+            </Button>
+          </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* Key Performance Indicators */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Shield className="h-4 w-4 mr-1" />
-                Items Reviewed
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">247</div>
-              <div className="text-sm text-oaia-green">+15% this month</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <AlertTriangle className="h-4 w-4 mr-1" />
-                Flagged Items
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">12</div>
-              <div className="text-sm text-oaia-gray">Require attention</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <CheckCircle className="h-4 w-4 mr-1" />
-                Compliance Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-green">94.8%</div>
-              <div className="text-sm text-oaia-green">+2.1% improvement</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Eye className="h-4 w-4 mr-1" />
-                Pending Review
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-orange-600">8</div>
-              <div className="text-sm text-oaia-gray">High priority items</div>
-            </CardContent>
-          </Card>
+          {auditKPIs.map((kpi, index) => (
+            <Card key={index}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <kpi.icon className={`h-4 w-4 mr-1 ${kpi.color}`} />
+                  {kpi.label}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className={`text-2xl font-bold ${kpi.color}`}>{kpi.value}</div>
+                <div className="text-sm text-oaia-gray">{kpi.change}</div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Compliance Overview */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-l-4 border-l-green-500">
-            <CardHeader>
-              <CardTitle className="text-lg text-oaia-blue">Low Risk</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600 mb-2">185</div>
-              <p className="text-sm text-oaia-gray">Items with minimal compliance issues</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-l-4 border-l-yellow-500">
-            <CardHeader>
-              <CardTitle className="text-lg text-oaia-blue">Medium Risk</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-yellow-600 mb-2">42</div>
-              <p className="text-sm text-oaia-gray">Items requiring closer monitoring</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-l-4 border-l-red-500">
-            <CardHeader>
-              <CardTitle className="text-lg text-oaia-blue">High Risk</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600 mb-2">12</div>
-              <p className="text-sm text-oaia-gray">Items flagged for investigation</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Audit Items */}
-        <Card>
+        {/* Critical Alerts */}
+        <Card className="mb-8 border-red-200 bg-red-50">
           <CardHeader>
-            <CardTitle className="text-xl text-oaia-blue">Recent Audit Items</CardTitle>
-            <CardDescription>
-              Latest transactions and documents under review
-            </CardDescription>
+            <CardTitle className="text-red-800 flex items-center">
+              <AlertTriangle className="h-5 w-5 mr-2" />
+              Critical Audit Alerts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-white rounded border-l-4 border-l-red-500">
+                <div>
+                  <p className="font-medium text-red-800">High-Value Anomaly Detected</p>
+                  <p className="text-sm text-red-700">Invoice INV-2024-156 exceeds contract limit by 40%</p>
+                </div>
+                <Button size="sm" variant="outline">
+                  <Eye className="h-4 w-4 mr-1" />
+                  Investigate
+                </Button>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-white rounded border-l-4 border-l-orange-500">
+                <div>
+                  <p className="font-medium text-orange-800">Potential Duplicate Payment</p>
+                  <p className="text-sm text-orange-700">Similar invoices from same contractor detected</p>
+                </div>
+                <Button size="sm" variant="outline">
+                  <Eye className="h-4 w-4 mr-1" />
+                  Review
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Audit Cases Section */}
+        <Card className="mb-8">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xl text-oaia-blue">Active Audit Cases</CardTitle>
+                <CardDescription>Investigations and reviews in progress</CardDescription>
+              </div>
+              <Button size="sm">
+                <FileSearch className="h-4 w-4 mr-2" />
+                New Audit Case
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {auditItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+              {auditCases.map((auditCase) => (
+                <div key={auditCase.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
                   <div className="flex items-center space-x-4">
-                    {getStatusIcon(item.status)}
+                    <FileSearch className="h-5 w-5 text-oaia-blue" />
                     <div>
-                      <div className="font-medium text-gray-900">{item.id}</div>
-                      <div className="text-sm text-oaia-gray">{item.type} - {item.reference}</div>
-                      <div className="text-sm text-oaia-gray">{item.agency}</div>
+                      <div className="font-medium text-gray-900">{auditCase.id}</div>
+                      <div className="text-sm font-medium text-oaia-blue">{auditCase.title}</div>
+                      <div className="text-sm text-oaia-gray">
+                        {auditCase.agency} • {auditCase.amount} • Assigned to: {auditCase.assignee}
+                      </div>
                     </div>
                   </div>
                   
                   <div className="flex items-center space-x-4">
-                    <Badge className={getRiskColor(item.risk)}>
-                      {item.risk.charAt(0).toUpperCase() + item.risk.slice(1)} Risk
+                    <Badge className={getRiskColor(auditCase.priority)}>
+                      {auditCase.priority.toUpperCase()}
                     </Badge>
-                    <Badge variant="outline">
-                      {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                    <Badge className={getStatusColor(auditCase.status)}>
+                      {auditCase.status.replace('-', ' ').toUpperCase()}
                     </Badge>
+                    <div className="text-sm text-oaia-gray">
+                      {auditCase.daysOpen} days
+                    </div>
                     <Button size="sm" variant="outline">
                       <Eye className="h-4 w-4 mr-1" />
-                      Review
+                      Details
                     </Button>
                   </div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Advanced Filtering & Search */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-lg text-oaia-blue flex items-center">
+              <Filter className="h-5 w-5 mr-2" />
+              Invoice Registry & Analytics
+            </CardTitle>
+            <CardDescription>Search and analyze all invoices with advanced filtering</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-5 gap-4 mb-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-oaia-gray" />
+                <Input
+                  placeholder="Search invoices..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              
+              <Select value={agencyFilter} onValueChange={setAgencyFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by Agency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Agencies</SelectItem>
+                  <SelectItem value="health">Ministry of Health</SelectItem>
+                  <SelectItem value="education">Ministry of Education</SelectItem>
+                  <SelectItem value="transport">Ministry of Transport</SelectItem>
+                  <SelectItem value="road-fund">Road Fund</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={riskFilter} onValueChange={setRiskFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Risk Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Risk Levels</SelectItem>
+                  <SelectItem value="high">High Risk</SelectItem>
+                  <SelectItem value="medium">Medium Risk</SelectItem>
+                  <SelectItem value="low">Low Risk</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Audit Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="under-audit">Under Audit</SelectItem>
+                  <SelectItem value="cleared">Cleared</SelectItem>
+                  <SelectItem value="flagged">Flagged</SelectItem>
+                  <SelectItem value="investigating">Investigating</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button className="flex items-center">
+                <Download className="h-4 w-4 mr-2" />
+                Export Data
+              </Button>
+            </div>
+
+            {/* Analytics Tools */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <Button variant="outline" className="flex items-center justify-center h-16">
+                <BarChart3 className="h-5 w-5 mr-2" />
+                Payment Cycle Analysis
+              </Button>
+              <Button variant="outline" className="flex items-center justify-center h-16">
+                <TrendingUp className="h-5 w-5 mr-2" />
+                Anomaly Detection
+              </Button>
+              <Button variant="outline" className="flex items-center justify-center h-16">
+                <Target className="h-5 w-5 mr-2" />
+                Duplicate Detection
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Flagged Invoices */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl text-oaia-blue flex items-center">
+              <AlertTriangle className="h-5 w-5 mr-2" />
+              Recently Flagged Invoices
+            </CardTitle>
+            <CardDescription>
+              Invoices requiring immediate audit attention
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {flaggedInvoices.map((invoice) => (
+                <div key={invoice.id} className="flex items-center justify-between p-4 border rounded-lg bg-red-50 border-red-200">
+                  <div className="flex items-center space-x-4">
+                    <AlertTriangle className="h-5 w-5 text-red-500" />
+                    <div>
+                      <div className="font-medium text-gray-900">{invoice.id}</div>
+                      <div className="text-sm text-oaia-gray">{invoice.contractor} • {invoice.agency}</div>
+                      <div className="text-sm font-medium text-red-700">{invoice.flag}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <div className="font-medium text-gray-900">{invoice.amount}</div>
+                      <div className="text-sm text-oaia-gray">{invoice.dateSubmitted}</div>
+                    </div>
+                    <Badge className={getRiskColor(invoice.riskLevel)}>
+                      {invoice.riskLevel.toUpperCase()} RISK
+                    </Badge>
+                    <Button size="sm" variant="outline">
+                      <Eye className="h-4 w-4 mr-1" />
+                      Audit
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6 flex justify-center">
+              <Button variant="outline">
+                View All Flagged Invoices
+              </Button>
             </div>
           </CardContent>
         </Card>
