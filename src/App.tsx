@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,6 +30,11 @@ import Settings from "./pages/agency/Settings";
 import Agencies from "./pages/ministry/Agencies";
 import FundingManagement from "./pages/ministry/FundingManagement";
 import BudgetReports from "./pages/ministry/BudgetReports";
+import AuditCases from "./pages/auditor/AuditCases";
+import InvoiceRegistry from "./pages/auditor/InvoiceRegistry";
+import AnalyticsTools from "./pages/auditor/AnalyticsTools";
+import AuditReports from "./pages/auditor/AuditReports";
+import AuditorNotifications from "./pages/auditor/AuditorNotifications";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +70,11 @@ const App = () => (
           <Route path="/ministry/agencies" element={<Agencies />} />
           <Route path="/ministry/funding" element={<FundingManagement />} />
           <Route path="/ministry/reports" element={<BudgetReports />} />
+          <Route path="/auditor/cases" element={<AuditCases />} />
+          <Route path="/auditor/registry" element={<InvoiceRegistry />} />
+          <Route path="/auditor/analytics" element={<AnalyticsTools />} />
+          <Route path="/auditor/reports" element={<AuditReports />} />
+          <Route path="/auditor/notifications" element={<AuditorNotifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

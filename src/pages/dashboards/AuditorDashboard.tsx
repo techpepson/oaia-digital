@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -155,25 +154,35 @@ const AuditorDashboard = () => {
           
           {/* Quick Navigation */}
           <div className="mt-4 flex flex-wrap gap-3">
-            <Button variant="outline" size="sm">
-              <FileSearch className="h-4 w-4 mr-2" />
-              Audit Cases
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auditor/cases">
+                <FileSearch className="h-4 w-4 mr-2" />
+                Audit Cases
+              </Link>
             </Button>
-            <Button variant="outline" size="sm">
-              <Database className="h-4 w-4 mr-2" />
-              Invoice Registry
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auditor/registry">
+                <Database className="h-4 w-4 mr-2" />
+                Invoice Registry
+              </Link>
             </Button>
-            <Button variant="outline" size="sm">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Analytics Tools
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auditor/analytics">
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Analytics Tools
+              </Link>
             </Button>
-            <Button variant="outline" size="sm">
-              <FileText className="h-4 w-4 mr-2" />
-              Audit Reports
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auditor/reports">
+                <FileText className="h-4 w-4 mr-2" />
+                Audit Reports
+              </Link>
             </Button>
-            <Button variant="outline" size="sm">
-              <Bell className="h-4 w-4 mr-2" />
-              Notifications
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auditor/notifications">
+                <Bell className="h-4 w-4 mr-2" />
+                Notifications
+              </Link>
             </Button>
           </div>
         </div>
