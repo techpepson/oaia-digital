@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,7 @@ import {
   Settings,
   Trash2,
   Eye,
-  MarkAsUnread
+  Mail
 } from 'lucide-react';
 
 const Notifications = () => {
@@ -276,7 +275,7 @@ const Notifications = () => {
                         </Button>
                         {!notification.read && (
                           <Button size="sm" variant="ghost">
-                            <MarkAsUnread className="h-4 w-4" />
+                            <Mail className="h-4 w-4" />
                           </Button>
                         )}
                         <Button size="sm" variant="ghost">
