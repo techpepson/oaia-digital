@@ -14,12 +14,29 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Logo />
           <div className="flex items-center space-x-4">
-            <Link to="/login">
-              <Button variant="ghost" className="text-oaia-blue hover:text-oaia-orange">
-                Login
-              </Button>
-            </Link>
-            <Link to="/signup">
+            <div className="flex items-center space-x-2">
+              <Link to="/login?type=contractor">
+                <Button variant="ghost" className="text-oaia-blue hover:text-oaia-orange">
+                  Contractor Login
+                </Button>
+              </Link>
+              <Link to="/login?type=agency">
+                <Button variant="ghost" className="text-oaia-blue hover:text-oaia-orange">
+                  Agency Login
+                </Button>
+              </Link>
+              <Link to="/login?type=ministry">
+                <Button variant="ghost" className="text-oaia-blue hover:text-oaia-orange">
+                  MOF Login
+                </Button>
+              </Link>
+              <Link to="/login?type=auditor">
+                <Button variant="ghost" className="text-oaia-blue hover:text-oaia-orange">
+                  AG Login
+                </Button>
+              </Link>
+            </div>
+            <Link to="/signup?type=contractor">
               <Button className="bg-oaia-blue hover:bg-oaia-blue/90 text-white">
                 Get Started
               </Button>
@@ -42,7 +59,7 @@ const Index = () => {
               Transparent, secure, and efficient invoice processing across Africa.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/signup">
+              <Link to="/signup?type=contractor">
                 <Button size="lg" className="bg-oaia-blue hover:bg-oaia-blue/90 text-white px-8 py-3">
                   Start Your Application
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -52,6 +69,90 @@ const Index = () => {
                 Learn More
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* User Type Cards */}
+      <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Choose Your Portal
+            </h2>
+            <p className="text-xl text-oaia-gray max-w-2xl mx-auto">
+              Access the right tools for your role in the government contracting ecosystem
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.location.href = '/signup?type=contractor'}>
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-oaia-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">C</span>
+                </div>
+                <CardTitle className="text-oaia-blue">Contractors</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="text-oaia-gray mb-4">
+                  Submit invoices, track payments, and manage your government contracts
+                </CardDescription>
+                <Button className="w-full bg-oaia-blue hover:bg-oaia-blue/90" asChild>
+                  <Link to="/signup?type=contractor">Get Started</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.location.href = '/signup?type=agency'}>
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-oaia-orange rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">A</span>
+                </div>
+                <CardTitle className="text-oaia-blue">Government Agencies</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="text-oaia-gray mb-4">
+                  Review and approve invoices, manage contracts and payments
+                </CardDescription>
+                <Button className="w-full bg-oaia-orange hover:bg-oaia-orange/90" asChild>
+                  <Link to="/signup?type=agency">Get Started</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.location.href = '/signup?type=ministry'}>
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-oaia-green rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">M</span>
+                </div>
+                <CardTitle className="text-oaia-blue">Ministry of Finance</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="text-oaia-gray mb-4">
+                  Oversee funding, budget management, and financial oversight
+                </CardDescription>
+                <Button className="w-full bg-oaia-green hover:bg-oaia-green/90" asChild>
+                  <Link to="/signup?type=ministry">Get Started</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.location.href = '/signup?type=auditor'}>
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">AG</span>
+                </div>
+                <CardTitle className="text-oaia-blue">Auditor General</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="text-oaia-gray mb-4">
+                  Access comprehensive data center for oversight and analysis
+                </CardDescription>
+                <Button className="w-full bg-gray-700 hover:bg-gray-600" asChild>
+                  <Link to="/signup?type=auditor">Get Started</Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

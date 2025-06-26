@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -35,6 +34,7 @@ import InvoiceRegistry from "./pages/auditor/InvoiceRegistry";
 import AnalyticsTools from "./pages/auditor/AnalyticsTools";
 import AuditReports from "./pages/auditor/AuditReports";
 import AuditorNotifications from "./pages/auditor/AuditorNotifications";
+import OaiaAdminDashboard from "./pages/dashboards/OaiaAdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +52,7 @@ const App = () => (
           <Route path="/dashboard/agency" element={<AgencyDashboard />} />
           <Route path="/dashboard/ministry" element={<MinistryDashboard />} />
           <Route path="/dashboard/auditor" element={<AuditorDashboard />} />
+          <Route path="/dashboard/oaia-admin" element={<OaiaAdminDashboard />} />
           <Route path="/create-invoice" element={<CreateInvoice />} />
           <Route path="/contractor/invoices" element={<InvoiceList />} />
           <Route path="/contractor/notifications" element={<Notifications />} />

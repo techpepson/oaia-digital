@@ -1,25 +1,26 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Logo from '@/components/Logo';
 import { toast } from 'sonner';
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
+  const userType = searchParams.get('type') || 'contractor';
+  
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    userType: ''
+    password: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.email || !formData.password || !formData.userType) {
+    if (!formData.email || !formData.password) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -29,8 +30,18 @@ const Login = () => {
     
     // Route to appropriate dashboard based on user type
     setTimeout(() => {
-      window.location.href = `/dashboard/${formData.userType}`;
+      window.location.href = `/dashboard/${userType}`;
     }, 1500);
+  };
+
+  const getUserTypeLabel = (type: string) => {
+    switch (type) {
+      case 'contractor': return 'Contractor';
+      case 'agency': return 'Government Agency';
+      case 'ministry': return 'Ministry of Finance';
+      case 'auditor': return 'Auditor General';
+      default: return 'User';
+    }
   };
 
   return (
@@ -42,7 +53,7 @@ const Login = () => {
             <Logo />
           </Link>
           <h1 className="mt-6 text-3xl font-bold text-gray-900">Welcome Back</h1>
-          <p className="mt-2 text-oaia-gray">Sign in to your OAIA account</p>
+          <p className="mt-2 text-oaia-gray">Sign in as {getUserTypeLabel(userType)}</p>
         </div>
 
         {/* Login Form */}
@@ -55,21 +66,6 @@ const Login = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="userType">Account Type</Label>
-                <Select onValueChange={(value) => setFormData({...formData, userType: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your account type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="contractor">Contractor</SelectItem>
-                    <SelectItem value="agency">Government Agency</SelectItem>
-                    <SelectItem value="ministry">Ministry of Finance</SelectItem>
-                    <SelectItem value="auditor">Auditor General</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -102,7 +98,7 @@ const Login = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-oaia-gray">
                 Don't have an account?{' '}
-                <Link to="/signup" className="text-oaia-blue hover:text-oaia-orange font-medium">
+                <Link to={`/signup?type=${userType}`} className="text-oaia-blue hover:text-oaia-orange font-medium">
                   Sign up
                 </Link>
               </p>

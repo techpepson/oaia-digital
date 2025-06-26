@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,9 @@ import { toast } from 'sonner';
 const CreateInvoice = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
+  const [paymentTerms, setPaymentTerms] = useState<string>('');
+  const [advancePercentage, setAdvancePercentage] = useState<number>(0);
+  const [advanceAmount, setAdvanceAmount] = useState<number>(0);
   
   const requiredDocuments = [
     'Certificate of Incorporation',
@@ -34,8 +36,40 @@ const CreateInvoice = () => {
     serviceDescription: '',
     amount: '',
     workPeriod: '',
-    completionDate: ''
+    completionDate: '',
+    invoiceDate: '',
+    dueDate: ''
   });
+
+  const calculateAdvancePercentage = (terms: string, amount: string) => {
+    const invoiceAmount = parseFloat(amount) || 0;
+    let discountRate = 0;
+    let percentage = 0;
+
+    switch (terms) {
+      case '30-days':
+        discountRate = 15;
+        percentage = 85;
+        break;
+      case '60-days':
+        discountRate = 20;
+        percentage = 80;
+        break;
+      case '90-days':
+        discountRate = 25;
+        percentage = 75;
+        break;
+      case '120-days':
+        discountRate = 30;
+        percentage = 70;
+        break;
+      default:
+        percentage = 0;
+    }
+
+    setAdvancePercentage(percentage);
+    setAdvanceAmount(invoiceAmount * (percentage / 100));
+  };
 
   const handleDocumentUpload = (docName: string) => {
     if (!uploadedDocs.includes(docName)) {
@@ -53,8 +87,12 @@ const CreateInvoice = () => {
     e.preventDefault();
     
     if (currentStep === 1) {
-      if (!formData.invoiceNumber || !formData.agency || !formData.amount) {
+      if (!formData.invoiceNumber || !formData.agency || !formData.amount || !formData.invoiceDate || !formData.dueDate) {
         toast.error('Please fill in all required fields');
+        return;
+      }
+      if (!paymentTerms) {
+        toast.error('Please select payment terms');
         return;
       }
       setCurrentStep(2);
@@ -179,12 +217,15 @@ const CreateInvoice = () => {
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="amount">Invoice Amount (KES) *</Label>
+                    <Label htmlFor="amount">Invoice Amount (GHS) *</Label>
                     <Input
                       id="amount"
                       placeholder="e.g., 450000"
                       value={formData.amount}
-                      onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                      onChange={(e) => {
+                        setFormData({...formData, amount: e.target.value});
+                        calculateAdvancePercentage(paymentTerms, e.target.value);
+                      }}
                     />
                   </div>
                   
@@ -198,16 +239,114 @@ const CreateInvoice = () => {
                     />
                   </div>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="completionDate">Completion Date</Label>
-                  <Input
-                    id="completionDate"
-                    type="date"
-                    value={formData.completionDate}
-                    onChange={(e) => setFormData({...formData, completionDate: e.target.value})}
-                  />
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="completionDate">Completion Date</Label>
+                    <Input
+                      id="completionDate"
+                      type="date"
+                      value={formData.completionDate}
+                      onChange={(e) => setFormData({...formData, completionDate: e.target.value})}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="invoiceDate">Invoice Date *</Label>
+                    <Input
+                      id="invoiceDate"
+                      type="date"
+                      value={formData.invoiceDate}
+                      onChange={(e) => setFormData({...formData, invoiceDate: e.target.value})}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="dueDate">Due Date *</Label>
+                    <Input
+                      id="dueDate"
+                      type="date"
+                      value={formData.dueDate}
+                      onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
+                    />
+                  </div>
                 </div>
+
+                {/* Payment Terms Selection */}
+                <div className="space-y-4">
+                  <Label>Do you know when this invoice is due for payment? *</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {['30-days', '60-days', '90-days', '120-days'].map((term) => (
+                      <Button
+                        key={term}
+                        type="button"
+                        variant={paymentTerms === term ? "default" : "outline"}
+                        onClick={() => {
+                          setPaymentTerms(term);
+                          calculateAdvancePercentage(term, formData.amount);
+                        }}
+                        className={paymentTerms === term ? "bg-oaia-blue" : ""}
+                      >
+                        {term.replace('-', ' ').toUpperCase()}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    type="button"
+                    variant={paymentTerms === 'not-applicable' ? "default" : "outline"}
+                    onClick={() => {
+                      setPaymentTerms('not-applicable');
+                      setAdvancePercentage(0);
+                      setAdvanceAmount(0);
+                    }}
+                    className={`w-full ${paymentTerms === 'not-applicable' ? "bg-gray-600" : ""}`}
+                  >
+                    Not Applicable / Don't Know
+                  </Button>
+                </div>
+
+                {/* Advance Percentage Display */}
+                {paymentTerms && paymentTerms !== 'not-applicable' && formData.amount && (
+                  <Card className="border-green-200 bg-green-50">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-green-900">Advance Payment Details</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-green-800">Payment Terms:</span>
+                          <Badge className="bg-green-100 text-green-800">
+                            {paymentTerms.replace('-', ' ').toUpperCase()}
+                          </Badge>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-green-800">Advance Percentage:</span>
+                            <span className="font-bold text-green-900">{advancePercentage}%</span>
+                          </div>
+                          <div className="w-full bg-green-200 rounded-full h-3">
+                            <div 
+                              className="bg-green-600 h-3 rounded-full transition-all duration-300" 
+                              style={{ width: `${advancePercentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-green-200">
+                          <div>
+                            <span className="text-sm text-green-700">Invoice Amount:</span>
+                            <div className="font-bold text-green-900">GHS {parseFloat(formData.amount).toLocaleString()}</div>
+                          </div>
+                          <div>
+                            <span className="text-sm text-green-700">Advance Amount:</span>
+                            <div className="font-bold text-green-900">GHS {advanceAmount.toLocaleString()}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
                 
                 <Button type="submit" className="w-full bg-oaia-blue hover:bg-oaia-blue/90">
                   Continue to Documents
