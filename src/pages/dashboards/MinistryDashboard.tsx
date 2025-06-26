@@ -198,6 +198,28 @@ const MinistryDashboard = () => {
           <p className="text-oaia-gray mt-1">Government-wide invoice financing oversight and management</p>
         </div>
 
+        {/* Navigation Links */}
+        <div className="mb-6 flex flex-wrap gap-4">
+          <Link to="/ministry/agencies">
+            <Button variant="outline" size="sm">
+              <Building2 className="h-4 w-4 mr-2" />
+              Manage Agencies
+            </Button>
+          </Link>
+          <Link to="/ministry/funding">
+            <Button variant="outline" size="sm">
+              <DollarSign className="h-4 w-4 mr-2" />
+              Funding Management
+            </Button>
+          </Link>
+          <Link to="/ministry/reports">
+            <Button variant="outline" size="sm">
+              <FileText className="h-4 w-4 mr-2" />
+              Budget Reports
+            </Button>
+          </Link>
+        </div>
+
         {/* Alerts Banner */}
         <div className="mb-6 grid md:grid-cols-2 gap-4">
           <Card className="border-yellow-200 bg-yellow-50">
@@ -217,7 +239,7 @@ const MinistryDashboard = () => {
                 <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
                 <div>
                   <p className="font-medium text-red-800">Overdue Payment Alert</p>
-                  <p className="text-sm text-red-700">3 invoices pending approval for >5 days</p>
+                  <p className="text-sm text-red-700">3 invoices pending approval for over 5 days</p>
                 </div>
               </div>
             </CardContent>
