@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +23,10 @@ import ApprovedInvoices from "./pages/agency/ApprovedInvoices";
 import RejectedInvoices from "./pages/agency/RejectedInvoices";
 import Payments from "./pages/agency/Payments";
 import FundRequests from "./pages/agency/FundRequests";
+import Contracts from "./pages/agency/Contracts";
+import Reports from "./pages/agency/Reports";
+import AgencyNotifications from "./pages/agency/Notifications";
+import Settings from "./pages/agency/Settings";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +55,10 @@ const App = () => (
           <Route path="/agency/pending-invoices" element={<PendingInvoices />} />
           <Route path="/agency/approved-invoices" element={<ApprovedInvoices />} />
           <Route path="/agency/rejected-invoices" element={<RejectedInvoices />} />
+          <Route path="/agency/contracts" element={<Contracts />} />
+          <Route path="/agency/reports" element={<Reports />} />
+          <Route path="/agency/notifications" element={<AgencyNotifications />} />
+          <Route path="/agency/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
