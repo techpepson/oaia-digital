@@ -39,10 +39,12 @@ import {
   Clock,
   Download,
 } from "lucide-react";
+import MinistrySidebar from "@/components/MinistrySidebar";
 
 const Agencies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const agencies = [
     {
@@ -138,235 +140,246 @@ const Agencies = () => {
   });
 
   return (
-    <div className="min-h-screen bg-oaia-light">
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/dashboard/ministry">
-            <Logo />
-          </Link>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-oaia-gray">
-              Ministry of Finance - Agencies
-            </span>
-            <Button variant="outline" size="sm">
-              Logout
-            </Button>
+    <div className="min-h-screen bg-oaia-light flex">
+      <MinistrySidebar
+        isCollapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed((c) => !c)}
+      />
+      <div className="flex-1 flex flex-col">
+        <header className="bg-white border-b shadow-sm">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <Link to="/dashboard/ministry">
+              <Logo />
+            </Link>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-oaia-gray">
+                Ministry of Finance - Agencies
+              </span>
+              <Button variant="outline" size="sm">
+                Logout
+              </Button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+        <div className="container mx-auto px-4 py-8 flex-1">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Agency Management
+            </h1>
+            <p className="text-oaia-gray mt-1">
+              Monitor and manage all registered government agencies
+            </p>
+          </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Agency Management
-          </h1>
-          <p className="text-oaia-gray mt-1">
-            Monitor and manage all registered government agencies
-          </p>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Building2 className="h-4 w-4 mr-1" />
-                Total Agencies
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">
-                {agencies.length}
-              </div>
-              <div className="text-sm text-oaia-green">All active</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <DollarSign className="h-4 w-4 mr-1" />
-                Total Outstanding
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">GHS 55.8M</div>
-              <div className="text-sm text-oaia-gray">Across all agencies</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                Avg Budget Utilization
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-green">75%</div>
-              <div className="text-sm text-oaia-gray">Within targets</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Clock className="h-4 w-4 mr-1" />
-                Avg Processing Time
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">3.2 days</div>
-              <div className="text-sm text-oaia-green">Within SLA</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters and Actions */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-wrap gap-4 items-center">
-              <div className="flex-1 min-w-64">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
-                    placeholder="Search agencies..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
+          {/* Summary Cards */}
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Building2 className="h-4 w-4 mr-1" />
+                  Total Agencies
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-blue">
+                  {agencies.length}
                 </div>
-              </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="Good Standing">Good Standing</SelectItem>
-                  <SelectItem value="Attention Required">
-                    Attention Required
-                  </SelectItem>
-                  <SelectItem value="Critical">Critical</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline">
-                <Filter className="h-4 w-4 mr-2" />
-                More Filters
-              </Button>
-              <Button variant="outline">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                <div className="text-sm text-oaia-green">All active</div>
+              </CardContent>
+            </Card>
 
-        {/* Agencies Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl text-oaia-blue">
-              Registered Agencies
-            </CardTitle>
-            <CardDescription>
-              Comprehensive overview of all government agencies and their
-              performance metrics
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Agency</TableHead>
-                    <TableHead>Code</TableHead>
-                    <TableHead>Advances</TableHead>
-                    <TableHead>Outstanding</TableHead>
-                    <TableHead>Budget Utilization</TableHead>
-                    <TableHead>Compliance</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredAgencies.map((agency) => (
-                    <TableRow key={agency.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{agency.name}</div>
-                          <div className="text-sm text-gray-500">
-                            Last active: {agency.lastActivity}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-mono text-sm">
-                        {agency.code}
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <div>Approved: {agency.approvedAdvances}</div>
-                          <div>Funded: {agency.fundedAdvances}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {agency.outstandingBalance}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-16 bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-oaia-blue h-2 rounded-full"
-                              style={{ width: `${agency.budgetUtilized}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium">
-                            {agency.budgetUtilized}%
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-1">
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span className="text-sm font-medium">
-                            {agency.complianceRate}%
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(agency.status)}>
-                          {agency.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <div className="font-medium">
-                            {agency.contactPerson}
-                          </div>
-                          <div className="text-gray-500">
-                            {agency.contactEmail}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-1">
-                          <Button size="sm" variant="ghost">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          {agency.status === "Attention Required" && (
-                            <Button size="sm" variant="ghost">
-                              <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <DollarSign className="h-4 w-4 mr-1" />
+                  Total Outstanding
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-blue">
+                  GHS 55.8M
+                </div>
+                <div className="text-sm text-oaia-gray">
+                  Across all agencies
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  Avg Budget Utilization
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-green">75%</div>
+                <div className="text-sm text-oaia-gray">Within targets</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Clock className="h-4 w-4 mr-1" />
+                  Avg Processing Time
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-blue">
+                  3.2 days
+                </div>
+                <div className="text-sm text-oaia-green">Within SLA</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filters and Actions */}
+          <Card className="mb-6">
+            <CardContent className="p-6">
+              <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex-1 min-w-64">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                      placeholder="Search agencies..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="Good Standing">Good Standing</SelectItem>
+                    <SelectItem value="Attention Required">
+                      Attention Required
+                    </SelectItem>
+                    <SelectItem value="Critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="outline">
+                  <Filter className="h-4 w-4 mr-2" />
+                  More Filters
+                </Button>
+                <Button variant="outline">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Agencies Table */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl text-oaia-blue">
+                Registered Agencies
+              </CardTitle>
+              <CardDescription>
+                Comprehensive overview of all government agencies and their
+                performance metrics
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Agency</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Advances</TableHead>
+                      <TableHead>Outstanding</TableHead>
+                      <TableHead>Budget Utilization</TableHead>
+                      <TableHead>Compliance</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredAgencies.map((agency) => (
+                      <TableRow key={agency.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{agency.name}</div>
+                            <div className="text-sm text-gray-500">
+                              Last active: {agency.lastActivity}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-mono text-sm">
+                          {agency.code}
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            <div>Approved: {agency.approvedAdvances}</div>
+                            <div>Funded: {agency.fundedAdvances}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {agency.outstandingBalance}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-16 bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-oaia-blue h-2 rounded-full"
+                                style={{ width: `${agency.budgetUtilized}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-sm font-medium">
+                              {agency.budgetUtilized}%
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-1">
+                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <span className="text-sm font-medium">
+                              {agency.complianceRate}%
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(agency.status)}>
+                            {agency.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            <div className="font-medium">
+                              {agency.contactPerson}
+                            </div>
+                            <div className="text-gray-500">
+                              {agency.contactEmail}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex space-x-1">
+                            <Button size="sm" variant="ghost">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            {agency.status === "Attention Required" && (
+                              <Button size="sm" variant="ghost">
+                                <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

@@ -35,6 +35,10 @@ import AnalyticsTools from "./pages/auditor/AnalyticsTools";
 import AuditReports from "./pages/auditor/AuditReports";
 import AuditorNotifications from "./pages/auditor/AuditorNotifications";
 import OaiaAdminDashboard from "./pages/dashboards/OaiaAdminDashboard";
+import MinistryNotifications from "./pages/ministry/Notifications";
+import MinistryAnalytics from "./pages/ministry/Analytics";
+import MinistrySettings from "./pages/ministry/Settings";
+import AuditorSettings from "./pages/auditor/Settings";
 
 const queryClient = new QueryClient();
 
@@ -48,11 +52,17 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard/contractor" element={<ContractorDashboard />} />
+          <Route
+            path="/dashboard/contractor"
+            element={<ContractorDashboard />}
+          />
           <Route path="/dashboard/agency" element={<AgencyDashboard />} />
           <Route path="/dashboard/ministry" element={<MinistryDashboard />} />
           <Route path="/dashboard/auditor" element={<AuditorDashboard />} />
-          <Route path="/dashboard/oaia-admin" element={<OaiaAdminDashboard />} />
+          <Route
+            path="/dashboard/oaia-admin"
+            element={<OaiaAdminDashboard />}
+          />
           <Route path="/create-invoice" element={<CreateInvoice />} />
           <Route path="/contractor/invoices" element={<InvoiceList />} />
           <Route path="/contractor/notifications" element={<Notifications />} />
@@ -61,12 +71,24 @@ const App = () => (
           <Route path="/contractor/advances" element={<AdvancesPayments />} />
           <Route path="/agency/payments" element={<Payments />} />
           <Route path="/agency/fund-requests" element={<FundRequests />} />
-          <Route path="/agency/pending-invoices" element={<PendingInvoices />} />
-          <Route path="/agency/approved-invoices" element={<ApprovedInvoices />} />
-          <Route path="/agency/rejected-invoices" element={<RejectedInvoices />} />
+          <Route
+            path="/agency/pending-invoices"
+            element={<PendingInvoices />}
+          />
+          <Route
+            path="/agency/approved-invoices"
+            element={<ApprovedInvoices />}
+          />
+          <Route
+            path="/agency/rejected-invoices"
+            element={<RejectedInvoices />}
+          />
           <Route path="/agency/contracts" element={<Contracts />} />
           <Route path="/agency/reports" element={<Reports />} />
-          <Route path="/agency/notifications" element={<AgencyNotifications />} />
+          <Route
+            path="/agency/notifications"
+            element={<AgencyNotifications />}
+          />
           <Route path="/agency/settings" element={<Settings />} />
           <Route path="/ministry/agencies" element={<Agencies />} />
           <Route path="/ministry/funding" element={<FundingManagement />} />
@@ -75,7 +97,17 @@ const App = () => (
           <Route path="/auditor/registry" element={<InvoiceRegistry />} />
           <Route path="/auditor/analytics" element={<AnalyticsTools />} />
           <Route path="/auditor/reports" element={<AuditReports />} />
-          <Route path="/auditor/notifications" element={<AuditorNotifications />} />
+          <Route
+            path="/auditor/notifications"
+            element={<AuditorNotifications />}
+          />
+          <Route
+            path="/ministry/notifications"
+            element={<MinistryNotifications />}
+          />
+          <Route path="/ministry/analytics" element={<MinistryAnalytics />} />
+          <Route path="/ministry/settings" element={<MinistrySettings />} />
+          <Route path="/auditor/settings" element={<AuditorSettings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

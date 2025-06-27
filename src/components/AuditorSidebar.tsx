@@ -2,13 +2,10 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  Clock,
-  CheckCircle,
-  XCircle,
-  CreditCard,
-  FileText,
-  FolderOpen,
+  FileSearch,
+  Database,
   BarChart3,
+  FileText,
   Bell,
   Settings,
   Menu,
@@ -17,37 +14,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface AgencySidebarProps {
+interface AuditorSidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
 }
 
-const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
+const AuditorSidebar = ({ isCollapsed, onToggle }: AuditorSidebarProps) => {
   const location = useLocation();
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/agency" },
-    {
-      icon: Clock,
-      label: "Pending Invoices",
-      path: "/agency/pending-invoices",
-    },
-    {
-      icon: CheckCircle,
-      label: "Approved Invoices",
-      path: "/agency/approved-invoices",
-    },
-    {
-      icon: XCircle,
-      label: "Rejected Invoices",
-      path: "/agency/rejected-invoices",
-    },
-    { icon: CreditCard, label: "Payments", path: "/agency/payments" },
-    { icon: FileText, label: "Fund Requests", path: "/agency/fund-requests" },
-    { icon: FolderOpen, label: "Contracts", path: "/agency/contracts" },
-    { icon: BarChart3, label: "Reports", path: "/agency/reports" },
-    { icon: Bell, label: "Notifications", path: "/agency/notifications" },
-    { icon: Settings, label: "Settings", path: "/agency/settings" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/auditor" },
+    { icon: FileSearch, label: "Audit Cases", path: "/auditor/cases" },
+    { icon: Database, label: "Invoice Registry", path: "/auditor/registry" },
+    { icon: BarChart3, label: "Analytics Tools", path: "/auditor/analytics" },
+    { icon: FileText, label: "Audit Reports", path: "/auditor/reports" },
+    { icon: Bell, label: "Notifications", path: "/auditor/notifications" },
+    { icon: Settings, label: "Settings", path: "/auditor/settings" },
   ];
 
   return (
@@ -62,7 +44,7 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <h2 className="text-lg font-semibold text-oaia-blue">
-              Agency Portal
+              Auditor Portal
             </h2>
           )}
           <Button
@@ -113,4 +95,4 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
   );
 };
 
-export default AgencySidebar;
+export default AuditorSidebar;

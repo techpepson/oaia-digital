@@ -2,12 +2,9 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  Clock,
-  CheckCircle,
-  XCircle,
-  CreditCard,
+  Building2,
+  DollarSign,
   FileText,
-  FolderOpen,
   BarChart3,
   Bell,
   Settings,
@@ -17,37 +14,26 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface AgencySidebarProps {
+interface MinistrySidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
 }
 
-const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
+const MinistrySidebar = ({ isCollapsed, onToggle }: MinistrySidebarProps) => {
   const location = useLocation();
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/agency" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/ministry" },
+    { icon: Building2, label: "Agencies", path: "/ministry/agencies" },
     {
-      icon: Clock,
-      label: "Pending Invoices",
-      path: "/agency/pending-invoices",
+      icon: DollarSign,
+      label: "Funding Management",
+      path: "/ministry/funding",
     },
-    {
-      icon: CheckCircle,
-      label: "Approved Invoices",
-      path: "/agency/approved-invoices",
-    },
-    {
-      icon: XCircle,
-      label: "Rejected Invoices",
-      path: "/agency/rejected-invoices",
-    },
-    { icon: CreditCard, label: "Payments", path: "/agency/payments" },
-    { icon: FileText, label: "Fund Requests", path: "/agency/fund-requests" },
-    { icon: FolderOpen, label: "Contracts", path: "/agency/contracts" },
-    { icon: BarChart3, label: "Reports", path: "/agency/reports" },
-    { icon: Bell, label: "Notifications", path: "/agency/notifications" },
-    { icon: Settings, label: "Settings", path: "/agency/settings" },
+    { icon: FileText, label: "Budget Reports", path: "/ministry/reports" },
+    { icon: BarChart3, label: "Analytics", path: "/ministry/analytics" },
+    { icon: Bell, label: "Notifications", path: "/ministry/notifications" },
+    { icon: Settings, label: "Settings", path: "/ministry/settings" },
   ];
 
   return (
@@ -62,7 +48,7 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <h2 className="text-lg font-semibold text-oaia-blue">
-              Agency Portal
+              Ministry Portal
             </h2>
           )}
           <Button
@@ -79,14 +65,12 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
           </Button>
         </div>
       </div>
-
       {/* Navigation Menu */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
-
             return (
               <li key={item.path}>
                 <Link
@@ -113,4 +97,4 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
   );
 };
 
-export default AgencySidebar;
+export default MinistrySidebar;

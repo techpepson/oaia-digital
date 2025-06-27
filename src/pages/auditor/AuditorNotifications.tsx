@@ -35,12 +35,14 @@ import {
   Settings,
   Trash2,
 } from "lucide-react";
+import AuditorSidebar from "@/components/AuditorSidebar";
 
 const AuditorNotifications = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const notifications = [
     {
@@ -194,254 +196,266 @@ const AuditorNotifications = () => {
   ).length;
 
   return (
-    <div className="min-h-screen bg-oaia-light">
-      {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/dashboard/auditor">
-            <Logo />
-          </Link>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-oaia-gray">Audit Notifications</span>
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/dashboard/auditor">Back to Dashboard</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-            <Bell className="h-8 w-8 mr-3 text-oaia-blue" />
-            Audit Notifications
-            {unreadCount > 0 && (
-              <Badge className="ml-3 bg-red-500 text-white">
-                {unreadCount} unread
-              </Badge>
-            )}
-          </h1>
-          <p className="text-oaia-gray mt-1">
-            Stay informed about critical audit events and system alerts
-          </p>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Bell className="h-4 w-4 mr-1" />
-                Total Notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">
-                {notifications.length}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Eye className="h-4 w-4 mr-1" />
-                Unread
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
-                {unreadCount}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <AlertTriangle className="h-4 w-4 mr-1" />
-                High Priority
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {highPriorityCount}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Archive className="h-4 w-4 mr-1" />
-                Archived
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-600">
-                {notifications.filter((n) => n.status === "archived").length}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Filter className="h-5 w-5 mr-2" />
-              Filter Notifications
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-5 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-oaia-gray" />
-                <Input
-                  placeholder="Search notifications..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Priorities</SelectItem>
-                  <SelectItem value="high">High Priority</SelectItem>
-                  <SelectItem value="medium">Medium Priority</SelectItem>
-                  <SelectItem value="low">Low Priority</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="unread">Unread</SelectItem>
-                  <SelectItem value="read">Read</SelectItem>
-                  <SelectItem value="archived">Archived</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="anomaly">Anomalies</SelectItem>
-                  <SelectItem value="duplicate">Duplicates</SelectItem>
-                  <SelectItem value="deadline">Deadlines</SelectItem>
-                  <SelectItem value="report">Reports</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button variant="outline">Mark All Read</Button>
+    <div className="min-h-screen bg-oaia-light flex">
+      <AuditorSidebar
+        isCollapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed((c) => !c)}
+      />
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="bg-white border-b shadow-sm">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <Link to="/dashboard/auditor">
+              <Logo />
+            </Link>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-oaia-gray">Notifications</span>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/dashboard/auditor">Back to Dashboard</Link>
+              </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </header>
+        <div className="container mx-auto px-4 py-8 flex-1">
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+              <Bell className="h-8 w-8 mr-3 text-oaia-blue" />
+              Audit Notifications
+              {unreadCount > 0 && (
+                <Badge className="ml-3 bg-red-500 text-white">
+                  {unreadCount} unread
+                </Badge>
+              )}
+            </h1>
+            <p className="text-oaia-gray mt-1">
+              Stay informed about critical audit events and system alerts
+            </p>
+          </div>
 
-        {/* Notifications List */}
-        <div className="space-y-4">
-          {filteredNotifications.map((notification) => (
-            <Card
-              key={notification.id}
-              className={`hover:shadow-md transition-shadow ${
-                notification.bgColor
-              } ${
-                notification.status === "unread"
-                  ? "border-l-4 border-l-blue-500"
-                  : ""
-              }`}
-            >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4">
-                    <notification.icon
-                      className={`h-6 w-6 mt-1 ${notification.color}`}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <h3
-                          className={`text-lg font-medium ${
-                            notification.status === "unread" ? "font-bold" : ""
-                          }`}
-                        >
-                          {notification.title}
-                        </h3>
-                        <Badge
-                          className={getPriorityColor(notification.priority)}
-                        >
-                          {notification.priority.toUpperCase()}
-                        </Badge>
-                        <Badge className={getStatusColor(notification.status)}>
-                          {notification.status.toUpperCase()}
-                        </Badge>
-                      </div>
-
-                      <p className="text-gray-700 mb-3">
-                        {notification.message}
-                      </p>
-
-                      <div className="flex items-center space-x-4 text-sm text-oaia-gray">
-                        <span className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {notification.timestamp}
-                        </span>
-                        <span className="flex items-center">
-                          <Users className="h-4 w-4 mr-1" />
-                          {notification.agency}
-                        </span>
-                        {notification.relatedCase && (
-                          <span className="flex items-center">
-                            <FileSearch className="h-4 w-4 mr-1" />
-                            Case: {notification.relatedCase}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2 ml-4">
-                    <Button size="sm" variant="outline">
-                      <Eye className="h-4 w-4 mr-1" />
-                      View
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      <Archive className="h-4 w-4 mr-1" />
-                      Archive
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+          {/* Summary Cards */}
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Bell className="h-4 w-4 mr-1" />
+                  Total Notifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-blue">
+                  {notifications.length}
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
 
-        {filteredNotifications.length === 0 && (
-          <Card className="text-center py-12">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Eye className="h-4 w-4 mr-1" />
+                  Unread
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">
+                  {unreadCount}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-1" />
+                  High Priority
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600">
+                  {highPriorityCount}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Archive className="h-4 w-4 mr-1" />
+                  Archived
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-600">
+                  {notifications.filter((n) => n.status === "archived").length}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filters */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Filter className="h-5 w-5 mr-2" />
+                Filter Notifications
+              </CardTitle>
+            </CardHeader>
             <CardContent>
-              <Bell className="h-12 w-12 mx-auto text-oaia-gray mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No notifications found
-              </h3>
-              <p className="text-oaia-gray">
-                Try adjusting your search criteria or filters.
-              </p>
+              <div className="grid md:grid-cols-5 gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-oaia-gray" />
+                  <Input
+                    placeholder="Search notifications..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+
+                <Select
+                  value={priorityFilter}
+                  onValueChange={setPriorityFilter}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Priorities</SelectItem>
+                    <SelectItem value="high">High Priority</SelectItem>
+                    <SelectItem value="medium">Medium Priority</SelectItem>
+                    <SelectItem value="low">Low Priority</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="unread">Unread</SelectItem>
+                    <SelectItem value="read">Read</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="anomaly">Anomalies</SelectItem>
+                    <SelectItem value="duplicate">Duplicates</SelectItem>
+                    <SelectItem value="deadline">Deadlines</SelectItem>
+                    <SelectItem value="report">Reports</SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button variant="outline">Mark All Read</Button>
+              </div>
             </CardContent>
           </Card>
-        )}
+
+          {/* Notifications List */}
+          <div className="space-y-4">
+            {filteredNotifications.map((notification) => (
+              <Card
+                key={notification.id}
+                className={`hover:shadow-md transition-shadow ${
+                  notification.bgColor
+                } ${
+                  notification.status === "unread"
+                    ? "border-l-4 border-l-blue-500"
+                    : ""
+                }`}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-4">
+                      <notification.icon
+                        className={`h-6 w-6 mt-1 ${notification.color}`}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <h3
+                            className={`text-lg font-medium ${
+                              notification.status === "unread"
+                                ? "font-bold"
+                                : ""
+                            }`}
+                          >
+                            {notification.title}
+                          </h3>
+                          <Badge
+                            className={getPriorityColor(notification.priority)}
+                          >
+                            {notification.priority.toUpperCase()}
+                          </Badge>
+                          <Badge
+                            className={getStatusColor(notification.status)}
+                          >
+                            {notification.status.toUpperCase()}
+                          </Badge>
+                        </div>
+
+                        <p className="text-gray-700 mb-3">
+                          {notification.message}
+                        </p>
+
+                        <div className="flex items-center space-x-4 text-sm text-oaia-gray">
+                          <span className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            {notification.timestamp}
+                          </span>
+                          <span className="flex items-center">
+                            <Users className="h-4 w-4 mr-1" />
+                            {notification.agency}
+                          </span>
+                          {notification.relatedCase && (
+                            <span className="flex items-center">
+                              <FileSearch className="h-4 w-4 mr-1" />
+                              Case: {notification.relatedCase}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2 ml-4">
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-4 w-4 mr-1" />
+                        View
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Archive className="h-4 w-4 mr-1" />
+                        Archive
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {filteredNotifications.length === 0 && (
+            <Card className="text-center py-12">
+              <CardContent>
+                <Bell className="h-12 w-12 mx-auto text-oaia-gray mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No notifications found
+                </h3>
+                <p className="text-oaia-gray">
+                  Try adjusting your search criteria or filters.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );

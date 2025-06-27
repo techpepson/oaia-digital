@@ -57,11 +57,13 @@ import {
   Eye,
   Banknote,
 } from "lucide-react";
+import MinistrySidebar from "@/components/MinistrySidebar";
 
 const MinistryDashboard = () => {
   const [selectedAgency, setSelectedAgency] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedMonth, setSelectedMonth] = useState("all");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Sample data for government-wide overview
   const budgetData = [
@@ -199,502 +201,520 @@ const MinistryDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-oaia-light">
-      {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/">
-            <Logo />
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Bell className="h-4 w-4 mr-2" />
-              Notifications
-              <Badge variant="destructive" className="ml-2">
-                5
-              </Badge>
-            </Button>
-            <span className="text-sm text-oaia-gray">Ministry of Finance</span>
-            <Button variant="outline" size="sm">
-              Logout
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Page Title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Ministry of Finance Dashboard
-          </h1>
-          <p className="text-oaia-gray mt-1">
-            Government-wide invoice financing oversight and management
-          </p>
-        </div>
-
-        {/* Navigation Links */}
-        <div className="mb-6 flex flex-wrap gap-4">
-          <Link to="/ministry/agencies">
-            <Button variant="outline" size="sm">
-              <Building2 className="h-4 w-4 mr-2" />
-              Manage Agencies
-            </Button>
-          </Link>
-          <Link to="/ministry/funding">
-            <Button variant="outline" size="sm">
-              <DollarSign className="h-4 w-4 mr-2" />
-              Funding Management
-            </Button>
-          </Link>
-          <Link to="/ministry/reports">
-            <Button variant="outline" size="sm">
-              <FileText className="h-4 w-4 mr-2" />
-              Budget Reports
-            </Button>
-          </Link>
-        </div>
-
-        {/* Alerts Banner */}
-        <div className="mb-6 grid md:grid-cols-2 gap-4">
-          <Card className="border-yellow-200 bg-yellow-50">
-            <CardContent className="p-4">
-              <div className="flex items-center">
-                <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
-                <div>
-                  <p className="font-medium text-yellow-800">
-                    Budget Threshold Alert
-                  </p>
-                  <p className="text-sm text-yellow-700">
-                    Road Fund approaching 85% of allocated budget
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-red-200 bg-red-50">
-            <CardContent className="p-4">
-              <div className="flex items-center">
-                <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
-                <div>
-                  <p className="font-medium text-red-800">
-                    Overdue Payment Alert
-                  </p>
-                  <p className="text-sm text-red-700">
-                    3 invoices pending approval for over 5 days
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <DollarSign className="h-4 w-4 mr-1" />
-                Total Advances Pending
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">GHS 18.5M</div>
-              <div className="text-sm text-oaia-green">Across 156 invoices</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Building2 className="h-4 w-4 mr-1" />
-                Active Agencies
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-green">24</div>
-              <div className="text-sm text-oaia-gray">4 require attention</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                Monthly Disbursements
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">GHS 45.2M</div>
-              <div className="text-sm text-oaia-green">
-                +12% from last month
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
-                <Activity className="h-4 w-4 mr-1" />
-                Compliance Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-oaia-green">94.5%</div>
-              <div className="text-sm text-oaia-gray">On-time payments</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Charts Row */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {/* Budget Trends */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl text-oaia-blue">
-                Monthly Budget Trends
-              </CardTitle>
-              <CardDescription>
-                Government-wide spending patterns and forecasts
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={budgetData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip
-                      formatter={(value) =>
-                        `GHS ${(value as number).toLocaleString()}`
-                      }
-                    />
-                    <Bar dataKey="funded" fill="#16A34A" name="Funded" />
-                    <Bar dataKey="approved" fill="#1E40AF" name="Approved" />
-                    <Bar dataKey="pending" fill="#EA580C" name="Pending" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Agency Distribution */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl text-oaia-blue">
-                Budget Allocation by Agency
-              </CardTitle>
-              <CardDescription>
-                Current fiscal year distribution
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={agencyData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) =>
-                        `${name} ${(percent * 100).toFixed(0)}%`
-                      }
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {agencyData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Agency Overview */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="text-xl text-oaia-blue">
-              Agency Performance Overview
-            </CardTitle>
-            <CardDescription>
-              Summary statistics for all registered agencies
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Agency</TableHead>
-                    <TableHead>Approved Advances</TableHead>
-                    <TableHead>Funded Advances</TableHead>
-                    <TableHead>Outstanding Balance</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Last Activity</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {agencies.map((agency) => (
-                    <TableRow key={agency.name}>
-                      <TableCell className="font-medium">
-                        {agency.name}
-                      </TableCell>
-                      <TableCell>{agency.approvedAdvances}</TableCell>
-                      <TableCell>{agency.fundedAdvances}</TableCell>
-                      <TableCell>{agency.outstandingBalance}</TableCell>
-                      <TableCell>
-                        <Badge
-                          className={
-                            agency.status === "Good Standing"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }
-                        >
-                          {agency.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {agency.lastActivity}
-                      </TableCell>
-                      <TableCell>
-                        <Button size="sm" variant="ghost">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Funding Requests */}
-        <Card className="mb-8">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl text-oaia-blue">
-                  Funding Requests
-                </CardTitle>
-                <CardDescription>
-                  Agency requests requiring MoF approval
-                </CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <Button size="sm" variant="outline">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                </Button>
-                <Button size="sm">Bulk Actions</Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Request ID</TableHead>
-                    <TableHead>Agency</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Invoice Count</TableHead>
-                    <TableHead>Request Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {fundingRequests.map((request) => (
-                    <TableRow key={request.id}>
-                      <TableCell className="font-medium">
-                        {request.id}
-                      </TableCell>
-                      <TableCell>{request.agency}</TableCell>
-                      <TableCell>{request.amount}</TableCell>
-                      <TableCell>{request.invoiceCount}</TableCell>
-                      <TableCell>{request.requestDate}</TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(request.status)}>
-                          {request.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-1">
-                          <Button size="sm" variant="ghost">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost">
-                            <CheckCircle className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost">
-                            <XCircle className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* All Invoices - Master List */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl text-oaia-blue">
-                  All Invoices - Master List
-                </CardTitle>
-                <CardDescription>
-                  Complete system-wide invoice overview with advanced filters
-                </CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <Button size="sm" variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export
-                </Button>
-                <Button size="sm" variant="outline">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Configure
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Filters */}
-            <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-              <div className="flex-1 min-w-48">
-                <Select
-                  value={selectedAgency}
-                  onValueChange={setSelectedAgency}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Agency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Agencies</SelectItem>
-                    <SelectItem value="getfund">GETFund</SelectItem>
-                    <SelectItem value="nhis">NHIS</SelectItem>
-                    <SelectItem value="roadfund">Road Fund</SelectItem>
-                    <SelectItem value="education">
-                      Ministry of Education
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex-1 min-w-48">
-                <Select
-                  value={selectedStatus}
-                  onValueChange={setSelectedStatus}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">
-                      Awaiting MoF Approval
-                    </SelectItem>
-                    <SelectItem value="funded">Funded</SelectItem>
-                    <SelectItem value="review">Under Review</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex-1 min-w-48">
-                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Months</SelectItem>
-                    <SelectItem value="2024-01">January 2024</SelectItem>
-                    <SelectItem value="2023-12">December 2023</SelectItem>
-                    <SelectItem value="2023-11">November 2023</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex-1 min-w-48">
-                <Input placeholder="Search by Invoice ID or Contractor" />
-              </div>
-              <Button variant="outline">
-                <Search className="h-4 w-4" />
+    <div className="min-h-screen bg-oaia-light flex">
+      <MinistrySidebar
+        isCollapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed((c) => !c)}
+      />
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="bg-white border-b shadow-sm">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <Link to="/">
+              <Logo />
+            </Link>
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm">
+                <Bell className="h-4 w-4 mr-2" />
+                Notifications
+                <Badge variant="destructive" className="ml-2">
+                  5
+                </Badge>
+              </Button>
+              <span className="text-sm text-oaia-gray">
+                Ministry of Finance
+              </span>
+              <Button variant="outline" size="sm">
+                Logout
               </Button>
             </div>
+          </div>
+        </header>
+        <div className="container mx-auto px-4 py-8 flex-1">
+          {/* Page Title */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Ministry of Finance Dashboard
+            </h1>
+            <p className="text-oaia-gray mt-1">
+              Government-wide invoice financing oversight and management
+            </p>
+          </div>
 
-            {/* Invoice Table */}
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice ID</TableHead>
-                    <TableHead>Agency</TableHead>
-                    <TableHead>Contractor</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Priority</TableHead>
-                    <TableHead>Budget Code</TableHead>
-                    <TableHead>Submitted</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell className="font-medium">
-                        {invoice.id}
-                      </TableCell>
-                      <TableCell>{invoice.agency}</TableCell>
-                      <TableCell>{invoice.contractor}</TableCell>
-                      <TableCell>{invoice.amount}</TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(invoice.status)}>
-                          {invoice.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getPriorityColor(invoice.priority)}>
-                          {invoice.priority}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {invoice.budgetCode}
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {invoice.submittedDate}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-1">
+          {/* Navigation Links */}
+          <div className="mb-6 flex flex-wrap gap-4">
+            <Link to="/ministry/agencies">
+              <Button variant="outline" size="sm">
+                <Building2 className="h-4 w-4 mr-2" />
+                Manage Agencies
+              </Button>
+            </Link>
+            <Link to="/ministry/funding">
+              <Button variant="outline" size="sm">
+                <DollarSign className="h-4 w-4 mr-2" />
+                Funding Management
+              </Button>
+            </Link>
+            <Link to="/ministry/reports">
+              <Button variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Budget Reports
+              </Button>
+            </Link>
+          </div>
+
+          {/* Alerts Banner */}
+          <div className="mb-6 grid md:grid-cols-2 gap-4">
+            <Card className="border-yellow-200 bg-yellow-50">
+              <CardContent className="p-4">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
+                  <div>
+                    <p className="font-medium text-yellow-800">
+                      Budget Threshold Alert
+                    </p>
+                    <p className="text-sm text-yellow-700">
+                      Road Fund approaching 85% of allocated budget
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="p-4">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                  <div>
+                    <p className="font-medium text-red-800">
+                      Overdue Payment Alert
+                    </p>
+                    <p className="text-sm text-red-700">
+                      3 invoices pending approval for over 5 days
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Key Metrics */}
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <DollarSign className="h-4 w-4 mr-1" />
+                  Total Advances Pending
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-blue">
+                  GHS 18.5M
+                </div>
+                <div className="text-sm text-oaia-green">
+                  Across 156 invoices
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Building2 className="h-4 w-4 mr-1" />
+                  Active Agencies
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-green">24</div>
+                <div className="text-sm text-oaia-gray">
+                  4 require attention
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  Monthly Disbursements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-blue">
+                  GHS 45.2M
+                </div>
+                <div className="text-sm text-oaia-green">
+                  +12% from last month
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
+                  <Activity className="h-4 w-4 mr-1" />
+                  Compliance Rate
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-oaia-green">94.5%</div>
+                <div className="text-sm text-oaia-gray">On-time payments</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Charts Row */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Budget Trends */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl text-oaia-blue">
+                  Monthly Budget Trends
+                </CardTitle>
+                <CardDescription>
+                  Government-wide spending patterns and forecasts
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={budgetData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <Tooltip
+                        formatter={(value) =>
+                          `GHS ${(value as number).toLocaleString()}`
+                        }
+                      />
+                      <Bar dataKey="funded" fill="#16A34A" name="Funded" />
+                      <Bar dataKey="approved" fill="#1E40AF" name="Approved" />
+                      <Bar dataKey="pending" fill="#EA580C" name="Pending" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Agency Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl text-oaia-blue">
+                  Budget Allocation by Agency
+                </CardTitle>
+                <CardDescription>
+                  Current fiscal year distribution
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={agencyData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) =>
+                          `${name} ${(percent * 100).toFixed(0)}%`
+                        }
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {agencyData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Agency Overview */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-xl text-oaia-blue">
+                Agency Performance Overview
+              </CardTitle>
+              <CardDescription>
+                Summary statistics for all registered agencies
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Agency</TableHead>
+                      <TableHead>Approved Advances</TableHead>
+                      <TableHead>Funded Advances</TableHead>
+                      <TableHead>Outstanding Balance</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Activity</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {agencies.map((agency) => (
+                      <TableRow key={agency.name}>
+                        <TableCell className="font-medium">
+                          {agency.name}
+                        </TableCell>
+                        <TableCell>{agency.approvedAdvances}</TableCell>
+                        <TableCell>{agency.fundedAdvances}</TableCell>
+                        <TableCell>{agency.outstandingBalance}</TableCell>
+                        <TableCell>
+                          <Badge
+                            className={
+                              agency.status === "Good Standing"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            }
+                          >
+                            {agency.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-600">
+                          {agency.lastActivity}
+                        </TableCell>
+                        <TableCell>
                           <Button size="sm" variant="ghost">
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost">
-                            <CheckCircle className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost">
-                            <Banknote className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Funding Requests */}
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl text-oaia-blue">
+                    Funding Requests
+                  </CardTitle>
+                  <CardDescription>
+                    Agency requests requiring MoF approval
+                  </CardDescription>
+                </div>
+                <div className="flex space-x-2">
+                  <Button size="sm" variant="outline">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filter
+                  </Button>
+                  <Button size="sm">Bulk Actions</Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Request ID</TableHead>
+                      <TableHead>Agency</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Invoice Count</TableHead>
+                      <TableHead>Request Date</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {fundingRequests.map((request) => (
+                      <TableRow key={request.id}>
+                        <TableCell className="font-medium">
+                          {request.id}
+                        </TableCell>
+                        <TableCell>{request.agency}</TableCell>
+                        <TableCell>{request.amount}</TableCell>
+                        <TableCell>{request.invoiceCount}</TableCell>
+                        <TableCell>{request.requestDate}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(request.status)}>
+                            {request.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex space-x-1">
+                            <Button size="sm" variant="ghost">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost">
+                              <CheckCircle className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost">
+                              <XCircle className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* All Invoices - Master List */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl text-oaia-blue">
+                    All Invoices - Master List
+                  </CardTitle>
+                  <CardDescription>
+                    Complete system-wide invoice overview with advanced filters
+                  </CardDescription>
+                </div>
+                <div className="flex space-x-2">
+                  <Button size="sm" variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configure
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Filters */}
+              <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex-1 min-w-48">
+                  <Select
+                    value={selectedAgency}
+                    onValueChange={setSelectedAgency}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Agency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Agencies</SelectItem>
+                      <SelectItem value="getfund">GETFund</SelectItem>
+                      <SelectItem value="nhis">NHIS</SelectItem>
+                      <SelectItem value="roadfund">Road Fund</SelectItem>
+                      <SelectItem value="education">
+                        Ministry of Education
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-1 min-w-48">
+                  <Select
+                    value={selectedStatus}
+                    onValueChange={setSelectedStatus}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="pending">
+                        Awaiting MoF Approval
+                      </SelectItem>
+                      <SelectItem value="funded">Funded</SelectItem>
+                      <SelectItem value="review">Under Review</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-1 min-w-48">
+                  <Select
+                    value={selectedMonth}
+                    onValueChange={setSelectedMonth}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Months</SelectItem>
+                      <SelectItem value="2024-01">January 2024</SelectItem>
+                      <SelectItem value="2023-12">December 2023</SelectItem>
+                      <SelectItem value="2023-11">November 2023</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-1 min-w-48">
+                  <Input placeholder="Search by Invoice ID or Contractor" />
+                </div>
+                <Button variant="outline">
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Invoice Table */}
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Invoice ID</TableHead>
+                      <TableHead>Agency</TableHead>
+                      <TableHead>Contractor</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Priority</TableHead>
+                      <TableHead>Budget Code</TableHead>
+                      <TableHead>Submitted</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentInvoices.map((invoice) => (
+                      <TableRow key={invoice.id}>
+                        <TableCell className="font-medium">
+                          {invoice.id}
+                        </TableCell>
+                        <TableCell>{invoice.agency}</TableCell>
+                        <TableCell>{invoice.contractor}</TableCell>
+                        <TableCell>{invoice.amount}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(invoice.status)}>
+                            {invoice.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getPriorityColor(invoice.priority)}>
+                            {invoice.priority}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-600">
+                          {invoice.budgetCode}
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-600">
+                          {invoice.submittedDate}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex space-x-1">
+                            <Button size="sm" variant="ghost">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost">
+                              <CheckCircle className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost">
+                              <Banknote className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
