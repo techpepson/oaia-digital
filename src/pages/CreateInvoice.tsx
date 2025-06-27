@@ -35,6 +35,18 @@ const CreateInvoice = () => {
     'Bank Statements or Financial Statements'
   ];
 
+  // Document type mapping for database
+  const documentTypeMapping: Record<string, string> = {
+    'Certificate of Incorporation': 'certificate_incorporation',
+    'Memorandum & Articles of Association': 'memorandum_articles',
+    'Shareholding Structure': 'shareholding_structure',
+    'Company Profile': 'company_profile',
+    'Directors ID Documents & Proof of Address': 'directors_id',
+    'Company Proof of Address': 'company_address_proof',
+    'Regulatory License (if applicable)': 'regulatory_license',
+    'Bank Statements or Financial Statements': 'financial_statements'
+  };
+
   const [formData, setFormData] = useState({
     invoiceNumber: '',
     agency: '',
@@ -91,12 +103,13 @@ const CreateInvoice = () => {
 
       if (uploadError) throw uploadError;
 
-      // Save document record
+      // Save document record with correct document_type
+      const documentType = documentTypeMapping[docName];
       const { error: dbError } = await supabase
         .from('compliance_documents')
         .insert({
           user_id: user.id,
-          document_type: docName.toLowerCase().replace(/\s+/g, '_').replace(/[&]/g, ''),
+          document_type: documentType,
           file_name: file.name,
           file_path: filePath,
           file_size: file.size,
@@ -152,13 +165,13 @@ const CreateInvoice = () => {
           service_description: formData.serviceDescription,
           amount: parseFloat(formData.amount),
           work_period: formData.workPeriod,
-          completion_date: formData.completionDate || null,
+          completion_date: formData.completionDate || undefined,
           invoice_date: formData.invoiceDate,
           due_date: formData.dueDate,
           payment_terms: paymentTerms,
           advance_percentage: advancePercentage,
           advance_amount: advanceAmount,
-          status: 'submitted',
+          status: 'submitted' as const,
           submitted_at: new Date().toISOString()
         });
 

@@ -57,7 +57,7 @@ export function useInvoices(userId?: string) {
         throw error;
       }
 
-      return data as Invoice[];
+      return data || [];
     },
     enabled: !!userId
   });
@@ -67,7 +67,7 @@ export function useCreateInvoice() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (invoiceData: Partial<Invoice>) => {
+    mutationFn: async (invoiceData: Omit<Invoice, 'id' | 'created_at' | 'updated_at' | 'profiles'>) => {
       const { data, error } = await supabase
         .from('invoices')
         .insert([invoiceData])
