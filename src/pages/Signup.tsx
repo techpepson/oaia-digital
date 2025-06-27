@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,15 +10,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Logo from '@/components/Logo';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
-import { useAuth } from '@/contexts/AuthContext';
 
 const Signup = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { signUp, user, loading } = useAuth();
   const userType = searchParams.get('type') || 'contractor';
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
     // Step 1: Basic Info
@@ -45,12 +41,6 @@ const Signup = () => {
 
   const totalSteps = userType === 'contractor' ? 3 : 2;
   const progress = (currentStep / totalSteps) * 100;
-
-  useEffect(() => {
-    if (!loading && user) {
-      navigate(`/dashboard/${userType}?onboarding=true`);
-    }
-  }, [user, loading, navigate, userType]);
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,38 +82,11 @@ const Signup = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-
-    try {
-      const userData = {
-        organization_name: formData.organizationName,
-        phone_number: formData.phoneNumber,
-        user_role: userType,
-        business_type: formData.businessType || null,
-        primary_region: formData.primaryRegion || null,
-        primary_agency: formData.primaryAgency || null
-      };
-
-      const { error } = await signUp(formData.email, formData.password, userData);
-      
-      if (error) {
-        console.error('Signup error:', error);
-        
-        if (error.message.includes('User already registered')) {
-          toast.error('An account with this email already exists. Please try signing in instead.');
-        } else {
-          toast.error('Signup failed: ' + error.message);
-        }
-      } else {
-        toast.success('Account created successfully! Please check your email to confirm your account.');
-      }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      toast.error('An unexpected error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSubmit = () => {
+    toast.success('Account created successfully! Redirecting to dashboard...');
+    setTimeout(() => {
+      window.location.href = `/dashboard/${userType}?onboarding=true`;
+    }, 2000);
   };
 
   const getUserTypeLabel = (type: string) => {
@@ -135,14 +98,6 @@ const Signup = () => {
       default: return 'User';
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-oaia-blue"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-oaia-light via-white to-oaia-light flex items-center justify-center p-4">
@@ -190,7 +145,6 @@ const Signup = () => {
                       value={formData.organizationName}
                       onChange={(e) => setFormData({...formData, organizationName: e.target.value})}
                       className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      disabled={isSubmitting}
                     />
                   </div>
                   
@@ -203,7 +157,6 @@ const Signup = () => {
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                       className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -216,7 +169,6 @@ const Signup = () => {
                       value={formData.phoneNumber}
                       onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
                       className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      disabled={isSubmitting}
                     />
                   </div>
                   
@@ -229,7 +181,6 @@ const Signup = () => {
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
                       className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      disabled={isSubmitting}
                     />
                   </div>
                   
@@ -242,7 +193,6 @@ const Signup = () => {
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                       className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      disabled={isSubmitting}
                     />
                   </div>
                 </>
@@ -428,17 +378,12 @@ const Signup = () => {
                     variant="outline" 
                     onClick={() => setCurrentStep(currentStep - 1)}
                     className="flex-1"
-                    disabled={isSubmitting}
                   >
                     Back
                   </Button>
                 )}
-                <Button 
-                  type="submit" 
-                  className="flex-1 bg-oaia-blue hover:bg-oaia-blue/90"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Processing...' : (currentStep === totalSteps ? 'Create Account' : 'Next')}
+                <Button type="submit" className="flex-1 bg-oaia-blue hover:bg-oaia-blue/90">
+                  {currentStep === totalSteps ? 'Create Account' : 'Next'}
                 </Button>
               </div>
             </form>
