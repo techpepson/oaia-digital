@@ -1,73 +1,77 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import Logo from '@/components/Logo';
-import ContractorSidebar from '@/components/ContractorSidebar';
-import NotificationFilters from '@/components/contractor/NotificationFilters';
-import NotificationList from '@/components/contractor/NotificationList';
-import { Bell, Menu, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import Logo from "@/components/Logo";
+import ContractorSidebar from "@/components/ContractorSidebar";
+import NotificationFilters from "@/components/contractor/NotificationFilters";
+import NotificationList from "@/components/contractor/NotificationList";
+import { Bell, Menu, X } from "lucide-react";
 
 const Notifications = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
 
   const notifications = [
     {
       id: 1,
-      type: 'success',
-      title: 'Invoice Approved',
-      message: 'Your invoice INV002 for School Infrastructure project has been approved by Ministry of Education.',
-      time: '2 hours ago',
+      type: "success",
+      title: "Invoice Approved",
+      message:
+        "Your invoice INV002 for School Infrastructure project has been approved by Ministry of Education.",
+      time: "2 hours ago",
       read: false,
-      invoiceId: 'INV002'
+      invoiceId: "INV002",
     },
     {
       id: 2,
-      type: 'info',
-      title: 'Advance Payment Processing',
-      message: 'Your advance payment request for INV001 (KES 225,000) is currently being processed.',
-      time: '1 day ago',
+      type: "info",
+      title: "Advance Payment Processing",
+      message:
+        "Your advance payment request for INV001 (GHS 225,000) is currently being processed.",
+      time: "1 day ago",
       read: false,
-      invoiceId: 'INV001'
+      invoiceId: "INV001",
     },
     {
       id: 3,
-      type: 'warning',
-      title: 'Additional Documents Required',
-      message: 'Please provide additional certification documents for INV003. Check the requirements in your invoice details.',
-      time: '2 days ago',
+      type: "warning",
+      title: "Additional Documents Required",
+      message:
+        "Please provide additional certification documents for INV003. Check the requirements in your invoice details.",
+      time: "2 days ago",
       read: true,
-      invoiceId: 'INV003'
+      invoiceId: "INV003",
     },
     {
       id: 4,
-      type: 'success',
-      title: 'Payment Received',
-      message: 'Payment of KES 175,000 has been successfully transferred to your account for invoice INV004.',
-      time: '3 days ago',
+      type: "success",
+      title: "Payment Received",
+      message:
+        "Payment of GHS 175,000 has been successfully transferred to your account for invoice INV004.",
+      time: "3 days ago",
       read: true,
-      invoiceId: 'INV004'
+      invoiceId: "INV004",
     },
     {
       id: 5,
-      type: 'info',
-      title: 'Document Verification Complete',
-      message: 'All documents for your company profile have been verified successfully.',
-      time: '1 week ago',
+      type: "info",
+      title: "Document Verification Complete",
+      message:
+        "All documents for your company profile have been verified successfully.",
+      time: "1 week ago",
       read: true,
-      invoiceId: null
-    }
+      invoiceId: null,
+    },
   ];
 
-  const filteredNotifications = notifications.filter(notification => {
-    if (filter === 'unread') return !notification.read;
-    if (filter === 'read') return notification.read;
+  const filteredNotifications = notifications.filter((notification) => {
+    if (filter === "unread") return !notification.read;
+    if (filter === "read") return notification.read;
     return true;
   });
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <div className="min-h-screen bg-oaia-light flex">
@@ -82,15 +86,23 @@ const Notifications = () => {
                 size="sm"
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               >
-                {sidebarCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
+                {sidebarCollapsed ? (
+                  <Menu className="h-4 w-4" />
+                ) : (
+                  <X className="h-4 w-4" />
+                )}
               </Button>
               <Link to="/">
                 <Logo showText={false} />
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-oaia-gray">Welcome back, John Doe</span>
-              <Button variant="outline" size="sm">Logout</Button>
+              <span className="text-sm text-oaia-gray">
+                Welcome back, John Doe
+              </span>
+              <Button variant="outline" size="sm">
+                Logout
+              </Button>
             </div>
           </div>
         </header>
@@ -107,16 +119,18 @@ const Notifications = () => {
                   </Badge>
                 )}
               </h1>
-              <p className="text-oaia-gray mt-1">Stay updated with your invoice status and important alerts</p>
+              <p className="text-oaia-gray mt-1">
+                Stay updated with your invoice status and important alerts
+              </p>
             </div>
-            <NotificationFilters 
+            <NotificationFilters
               filter={filter}
               setFilter={setFilter}
               unreadCount={unreadCount}
             />
           </div>
 
-          <NotificationList 
+          <NotificationList
             notifications={filteredNotifications}
             filter={filter}
           />

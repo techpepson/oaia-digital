@@ -1,13 +1,24 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Logo from '@/components/Logo';
-import { 
-  BarChart3, 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Logo from "@/components/Logo";
+import {
+  BarChart3,
   TrendingUp,
   Search,
   Target,
@@ -21,120 +32,122 @@ import {
   Activity,
   Database,
   FileSearch,
-  Settings
-} from 'lucide-react';
+  Settings,
+} from "lucide-react";
 
 const AnalyticsTools = () => {
-  const [analysisType, setAnalysisType] = useState('');
-  const [dateRange, setDateRange] = useState('last-30-days');
-  const [agency, setAgency] = useState('all');
+  const [analysisType, setAnalysisType] = useState("");
+  const [dateRange, setDateRange] = useState("last-30-days");
+  const [agency, setAgency] = useState("all");
 
   const analyticsTools = [
     {
-      id: 'duplicate-detection',
-      title: 'Duplicate Payment Detection',
-      description: 'AI-powered detection of potential duplicate invoices and payments',
+      id: "duplicate-detection",
+      title: "Duplicate Payment Detection",
+      description:
+        "AI-powered detection of potential duplicate invoices and payments",
       icon: Target,
-      color: 'text-red-600',
-      bgColor: 'bg-red-50',
-      borderColor: 'border-red-200',
-      results: '8 potential duplicates found',
-      lastRun: '2 hours ago'
+      color: "text-red-600",
+      bgColor: "bg-red-50",
+      borderColor: "border-red-200",
+      results: "8 potential duplicates found",
+      lastRun: "2 hours ago",
     },
     {
-      id: 'amount-analysis',
-      title: 'Amount Threshold Analysis',
-      description: 'Identify invoices exceeding contract values or unusual amounts',
+      id: "amount-analysis",
+      title: "Amount Threshold Analysis",
+      description:
+        "Identify invoices exceeding contract values or unusual amounts",
       icon: TrendingUp,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
-      borderColor: 'border-orange-200',
-      results: '12 threshold violations',
-      lastRun: '1 day ago'
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200",
+      results: "12 threshold violations",
+      lastRun: "1 day ago",
     },
     {
-      id: 'pattern-analysis',
-      title: 'Payment Pattern Analysis',
-      description: 'Detect unusual payment patterns and frequency anomalies',
+      id: "pattern-analysis",
+      title: "Payment Pattern Analysis",
+      description: "Detect unusual payment patterns and frequency anomalies",
       icon: Activity,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200',
-      results: '5 unusual patterns',
-      lastRun: '6 hours ago'
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      results: "5 unusual patterns",
+      lastRun: "6 hours ago",
     },
     {
-      id: 'risk-heatmap',
-      title: 'Risk Assessment Heatmap',
-      description: 'Visual heatmap of high-risk contractors and agencies',
+      id: "risk-heatmap",
+      title: "Risk Assessment Heatmap",
+      description: "Visual heatmap of high-risk contractors and agencies",
       icon: BarChart3,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-      borderColor: 'border-purple-200',
-      results: '3 high-risk entities',
-      lastRun: '4 hours ago'
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
+      results: "3 high-risk entities",
+      lastRun: "4 hours ago",
     },
     {
-      id: 'timeline-analysis',
-      title: 'Invoice Timeline Analysis',
-      description: 'Analyze processing times and identify bottlenecks',
+      id: "timeline-analysis",
+      title: "Invoice Timeline Analysis",
+      description: "Analyze processing times and identify bottlenecks",
       icon: LineChart,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-200',
-      results: 'Avg. 5.2 days processing',
-      lastRun: '3 hours ago'
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200",
+      results: "Avg. 5.2 days processing",
+      lastRun: "3 hours ago",
     },
     {
-      id: 'compliance-analysis',
-      title: 'Compliance Checker',
-      description: 'Automated compliance verification against policies',
+      id: "compliance-analysis",
+      title: "Compliance Checker",
+      description: "Automated compliance verification against policies",
       icon: FileSearch,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50',
-      borderColor: 'border-indigo-200',
-      results: '94.2% compliance rate',
-      lastRun: '1 hour ago'
-    }
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50",
+      borderColor: "border-indigo-200",
+      results: "94.2% compliance rate",
+      lastRun: "1 hour ago",
+    },
   ];
 
   const recentAnalyses = [
     {
-      id: 'ANA-2024-001',
-      type: 'Duplicate Detection',
-      agency: 'Ministry of Health',
-      dateRun: '2024-01-20 14:30',
+      id: "ANA-2024-001",
+      type: "Duplicate Detection",
+      agency: "Ministry of Health",
+      dateRun: "2024-01-20 14:30",
       findings: 3,
-      status: 'completed',
-      risk: 'high'
+      status: "completed",
+      risk: "high",
     },
     {
-      id: 'ANA-2024-002',
-      type: 'Amount Analysis',
-      agency: 'Road Fund',
-      dateRun: '2024-01-20 10:15',
+      id: "ANA-2024-002",
+      type: "Amount Analysis",
+      agency: "Road Fund",
+      dateRun: "2024-01-20 10:15",
       findings: 7,
-      status: 'completed',
-      risk: 'medium'
+      status: "completed",
+      risk: "medium",
     },
     {
-      id: 'ANA-2024-003',
-      type: 'Pattern Analysis',
-      agency: 'All Agencies',
-      dateRun: '2024-01-19 16:45',
+      id: "ANA-2024-003",
+      type: "Pattern Analysis",
+      agency: "All Agencies",
+      dateRun: "2024-01-19 16:45",
       findings: 12,
-      status: 'completed',
-      risk: 'low'
-    }
+      status: "completed",
+      risk: "low",
+    },
   ];
 
   const queryTemplates = [
-    'Invoices > KES 500,000 in last 30 days',
-    'Duplicate contractors in same agency',
-    'Invoices exceeding contract values',
-    'Payment delays > 14 days',
-    'High-frequency submissions from single contractor',
-    'Invoices submitted outside business hours'
+    "Invoices > GHS 500,000 in last 30 days",
+    "Duplicate contractors in same agency",
+    "Invoices exceeding contract values",
+    "Payment delays > 14 days",
+    "High-frequency submissions from single contractor",
+    "Invoices submitted outside business hours",
   ];
 
   return (
@@ -146,7 +159,9 @@ const AnalyticsTools = () => {
             <Logo />
           </Link>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-oaia-gray">Analytics & Query Tools</span>
+            <span className="text-sm text-oaia-gray">
+              Analytics & Query Tools
+            </span>
             <Button variant="outline" size="sm" asChild>
               <Link to="/dashboard/auditor">Back to Dashboard</Link>
             </Button>
@@ -161,7 +176,10 @@ const AnalyticsTools = () => {
             <BarChart3 className="h-8 w-8 mr-3 text-oaia-blue" />
             Analytics Tools
           </h1>
-          <p className="text-oaia-gray mt-1">Advanced analytics, visualization, and query tools for audit investigations</p>
+          <p className="text-oaia-gray mt-1">
+            Advanced analytics, visualization, and query tools for audit
+            investigations
+          </p>
         </div>
 
         {/* Quick Analysis Setup */}
@@ -171,7 +189,9 @@ const AnalyticsTools = () => {
               <Zap className="h-5 w-5 mr-2" />
               Quick Analysis Setup
             </CardTitle>
-            <CardDescription>Configure and run automated analysis tools</CardDescription>
+            <CardDescription>
+              Configure and run automated analysis tools
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-4 gap-4">
@@ -206,7 +226,9 @@ const AnalyticsTools = () => {
                 <SelectContent>
                   <SelectItem value="all">All Agencies</SelectItem>
                   <SelectItem value="health">Ministry of Health</SelectItem>
-                  <SelectItem value="education">Ministry of Education</SelectItem>
+                  <SelectItem value="education">
+                    Ministry of Education
+                  </SelectItem>
                   <SelectItem value="road">Road Fund</SelectItem>
                 </SelectContent>
               </Select>
@@ -222,7 +244,10 @@ const AnalyticsTools = () => {
         {/* Analytics Tools Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {analyticsTools.map((tool) => (
-            <Card key={tool.id} className={`hover:shadow-md transition-shadow ${tool.bgColor} ${tool.borderColor} border-2`}>
+            <Card
+              key={tool.id}
+              className={`hover:shadow-md transition-shadow ${tool.bgColor} ${tool.borderColor} border-2`}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <tool.icon className={`h-6 w-6 mr-3 ${tool.color}`} />
@@ -235,8 +260,12 @@ const AnalyticsTools = () => {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-oaia-gray">Latest Results:</span>
-                    <span className={`text-sm font-medium ${tool.color}`}>{tool.results}</span>
+                    <span className="text-sm text-oaia-gray">
+                      Latest Results:
+                    </span>
+                    <span className={`text-sm font-medium ${tool.color}`}>
+                      {tool.results}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-oaia-gray">Last Run:</span>
@@ -264,7 +293,9 @@ const AnalyticsTools = () => {
               <Database className="h-5 w-5 mr-2" />
               Custom Query Builder
             </CardTitle>
-            <CardDescription>Build custom queries to analyze specific data patterns</CardDescription>
+            <CardDescription>
+              Build custom queries to analyze specific data patterns
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -273,14 +304,19 @@ const AnalyticsTools = () => {
                   <h4 className="font-medium mb-2">Query Templates</h4>
                   <div className="space-y-2">
                     {queryTemplates.map((template, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                      >
                         <span className="text-sm">{template}</span>
-                        <Button size="sm" variant="outline">Use</Button>
+                        <Button size="sm" variant="outline">
+                          Use
+                        </Button>
                       </div>
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-2">Custom Query</h4>
                   <div className="space-y-3">
@@ -309,12 +345,17 @@ const AnalyticsTools = () => {
               <Activity className="h-5 w-5 mr-2" />
               Recent Analysis Results
             </CardTitle>
-            <CardDescription>View and manage recent analysis runs</CardDescription>
+            <CardDescription>
+              View and manage recent analysis runs
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentAnalyses.map((analysis) => (
-                <div key={analysis.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                <div
+                  key={analysis.id}
+                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center space-x-4">
                     <Activity className="h-5 w-5 text-oaia-blue" />
                     <div>
@@ -324,17 +365,25 @@ const AnalyticsTools = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
-                      <div className="font-medium">{analysis.findings} findings</div>
-                      <div className="text-sm text-oaia-gray capitalize">{analysis.status}</div>
+                      <div className="font-medium">
+                        {analysis.findings} findings
+                      </div>
+                      <div className="text-sm text-oaia-gray capitalize">
+                        {analysis.status}
+                      </div>
                     </div>
-                    <div className={`px-2 py-1 rounded text-xs font-medium ${
-                      analysis.risk === 'high' ? 'bg-red-100 text-red-800' :
-                      analysis.risk === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
+                    <div
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        analysis.risk === "high"
+                          ? "bg-red-100 text-red-800"
+                          : analysis.risk === "medium"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
                       {analysis.risk.toUpperCase()}
                     </div>
                     <Button size="sm" variant="outline">

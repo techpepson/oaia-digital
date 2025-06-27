@@ -1,20 +1,38 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Logo from '@/components/Logo';
-import AgencySidebar from '@/components/AgencySidebar';
-import { 
-  Settings as SettingsIcon, 
-  Users, 
-  Bell, 
-  Shield, 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import Logo from "@/components/Logo";
+import AgencySidebar from "@/components/AgencySidebar";
+import {
+  Settings as SettingsIcon,
+  Users,
+  Bell,
+  Shield,
   Workflow,
   Plus,
   Edit,
@@ -23,92 +41,100 @@ import {
   Key,
   Mail,
   Phone,
-  Building
-} from 'lucide-react';
+  Building,
+} from "lucide-react";
 
 const Settings = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('users');
+  const [activeTab, setActiveTab] = useState("users");
 
   const users = [
     {
       id: 1,
-      name: 'Dr. Jane Mwangi',
-      email: 'jane.mwangi@health.go.ke',
-      role: 'Department Head',
-      permissions: 'Full Access',
-      status: 'active',
-      lastLogin: '2024-01-20 14:30'
+      name: "Dr. Jane Mwangi",
+      email: "jane.mwangi@health.go.ke",
+      role: "Department Head",
+      permissions: "Full Access",
+      status: "active",
+      lastLogin: "2024-01-20 14:30",
     },
     {
       id: 2,
-      name: 'John Kamau',
-      email: 'john.kamau@health.go.ke',
-      role: 'Finance Officer',
-      permissions: 'Invoice Review',
-      status: 'active',
-      lastLogin: '2024-01-20 09:15'
+      name: "John Kamau",
+      email: "john.kamau@health.go.ke",
+      role: "Finance Officer",
+      permissions: "Invoice Review",
+      status: "active",
+      lastLogin: "2024-01-20 09:15",
     },
     {
       id: 3,
-      name: 'Mary Wanjiku',
-      email: 'mary.wanjiku@health.go.ke',
-      role: 'Procurement Officer',
-      permissions: 'Contract Management',
-      status: 'inactive',
-      lastLogin: '2024-01-18 16:45'
-    }
+      name: "Mary Wanjiku",
+      email: "mary.wanjiku@health.go.ke",
+      role: "Procurement Officer",
+      permissions: "Contract Management",
+      status: "inactive",
+      lastLogin: "2024-01-18 16:45",
+    },
   ];
 
   const workflows = [
     {
       id: 1,
-      name: 'Standard Invoice Approval',
-      description: 'Default workflow for invoice amounts under KES 500,000',
-      steps: ['Finance Officer Review', 'Department Head Approval'],
-      status: 'active',
-      invoiceThreshold: 'KES 500,000'
+      name: "Standard Invoice Approval",
+      description: "Default workflow for invoice amounts under KES 500,000",
+      steps: ["Finance Officer Review", "Department Head Approval"],
+      status: "active",
+      invoiceThreshold: "KES 500,000",
     },
     {
       id: 2,
-      name: 'High-Value Invoice Approval',
-      description: 'Enhanced workflow for invoices above KES 500,000',
-      steps: ['Finance Officer Review', 'Department Head Approval', 'Director Sign-off'],
-      status: 'active',
-      invoiceThreshold: 'Above KES 500,000'
+      name: "High-Value Invoice Approval",
+      description: "Enhanced workflow for invoices above KES 500,000",
+      steps: [
+        "Finance Officer Review",
+        "Department Head Approval",
+        "Director Sign-off",
+      ],
+      status: "active",
+      invoiceThreshold: "Above KES 500,000",
     },
     {
       id: 3,
-      name: 'Emergency Approval',
-      description: 'Fast-track workflow for urgent payments',
-      steps: ['Department Head Direct Approval'],
-      status: 'active',
-      invoiceThreshold: 'Any Amount'
-    }
+      name: "Emergency Approval",
+      description: "Fast-track workflow for urgent payments",
+      steps: ["Department Head Direct Approval"],
+      status: "active",
+      invoiceThreshold: "Any Amount",
+    },
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'inactive': return 'bg-red-100 text-red-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "inactive":
+        return "bg-red-100 text-red-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const tabItems = [
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'workflows', label: 'Approval Workflows', icon: Workflow },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'security', label: 'Security', icon: Shield },
-    { id: 'agency', label: 'Agency Profile', icon: Building }
+    { id: "users", label: "User Management", icon: Users },
+    { id: "workflows", label: "Approval Workflows", icon: Workflow },
+    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "security", label: "Security", icon: Shield },
+    { id: "agency", label: "Agency Profile", icon: Building },
   ];
 
   return (
     <div className="min-h-screen bg-oaia-light flex">
-      <AgencySidebar 
-        isCollapsed={sidebarCollapsed} 
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      <AgencySidebar
+        isCollapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
       <div className="flex-1 flex flex-col">
@@ -120,8 +146,12 @@ const Settings = () => {
                 <Logo showText={false} />
               </Link>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Agency Settings</h1>
-                <p className="text-sm text-oaia-gray">Configure users, workflows, and system preferences</p>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Agency Settings
+                </h1>
+                <p className="text-sm text-oaia-gray">
+                  Configure users, workflows, and system preferences
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -149,8 +179,8 @@ const Settings = () => {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                         activeTab === tab.id
-                          ? 'bg-white text-oaia-blue shadow-sm'
-                          : 'text-oaia-gray hover:text-gray-900'
+                          ? "bg-white text-oaia-blue shadow-sm"
+                          : "text-oaia-gray hover:text-gray-900"
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -163,7 +193,7 @@ const Settings = () => {
           </Card>
 
           {/* User Management */}
-          {activeTab === 'users' && (
+          {activeTab === "users" && (
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -198,7 +228,9 @@ const Settings = () => {
                   <TableBody>
                     {users.map((user) => (
                       <TableRow key={user.id}>
-                        <TableCell className="font-medium">{user.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {user.name}
+                        </TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.role}</TableCell>
                         <TableCell>{user.permissions}</TableCell>
@@ -207,7 +239,9 @@ const Settings = () => {
                             {user.status.toUpperCase()}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-sm text-oaia-gray">{user.lastLogin}</TableCell>
+                        <TableCell className="text-sm text-oaia-gray">
+                          {user.lastLogin}
+                        </TableCell>
                         <TableCell>
                           <div className="flex space-x-2">
                             <Button size="sm" variant="outline">
@@ -227,7 +261,7 @@ const Settings = () => {
           )}
 
           {/* Approval Workflows */}
-          {activeTab === 'workflows' && (
+          {activeTab === "workflows" && (
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -237,7 +271,8 @@ const Settings = () => {
                       Approval Workflows
                     </CardTitle>
                     <CardDescription>
-                      Configure automated approval processes for different invoice types
+                      Configure automated approval processes for different
+                      invoice types
                     </CardDescription>
                   </div>
                   <Button className="bg-oaia-green hover:bg-oaia-green/90">
@@ -249,31 +284,52 @@ const Settings = () => {
               <CardContent>
                 <div className="space-y-4">
                   {workflows.map((workflow) => (
-                    <Card key={workflow.id} className="border-l-4 border-l-oaia-blue">
+                    <Card
+                      key={workflow.id}
+                      className="border-l-4 border-l-oaia-blue"
+                    >
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center space-x-2 mb-2">
-                              <h4 className="font-medium text-gray-900">{workflow.name}</h4>
-                              <Badge className={getStatusColor(workflow.status)}>
+                              <h4 className="font-medium text-gray-900">
+                                {workflow.name}
+                              </h4>
+                              <Badge
+                                className={getStatusColor(workflow.status)}
+                              >
                                 {workflow.status.toUpperCase()}
                               </Badge>
                             </div>
-                            <p className="text-sm text-oaia-gray mb-2">{workflow.description}</p>
+                            <p className="text-sm text-oaia-gray mb-2">
+                              {workflow.description}
+                            </p>
                             <div className="flex items-center space-x-4 text-xs text-oaia-gray">
-                              <span>Threshold: {workflow.invoiceThreshold}</span>
+                              <span>
+                                Threshold: {workflow.invoiceThreshold}
+                              </span>
                               <span>• Steps: {workflow.steps.length}</span>
                             </div>
                             <div className="mt-2">
                               <div className="flex items-center space-x-2">
-                                <span className="text-xs font-medium text-gray-600">Workflow Steps:</span>
+                                <span className="text-xs font-medium text-gray-600">
+                                  Workflow Steps:
+                                </span>
                                 {workflow.steps.map((step, index) => (
-                                  <div key={index} className="flex items-center">
-                                    <Badge variant="outline" className="text-xs">
+                                  <div
+                                    key={index}
+                                    className="flex items-center"
+                                  >
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
                                       {index + 1}. {step}
                                     </Badge>
                                     {index < workflow.steps.length - 1 && (
-                                      <span className="mx-2 text-oaia-gray">→</span>
+                                      <span className="mx-2 text-oaia-gray">
+                                        →
+                                      </span>
                                     )}
                                   </div>
                                 ))}
@@ -299,7 +355,7 @@ const Settings = () => {
           )}
 
           {/* Agency Profile */}
-          {activeTab === 'agency' && (
+          {activeTab === "agency" && (
             <div className="grid lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -318,7 +374,10 @@ const Settings = () => {
                   </div>
                   <div>
                     <Label htmlFor="department">Department</Label>
-                    <Input id="department" defaultValue="Healthcare Infrastructure" />
+                    <Input
+                      id="department"
+                      defaultValue="Healthcare Infrastructure"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="agency-code">Agency Code</Label>
@@ -326,7 +385,11 @@ const Settings = () => {
                   </div>
                   <div>
                     <Label htmlFor="contact-email">Contact Email</Label>
-                    <Input id="contact-email" type="email" defaultValue="info@health.go.ke" />
+                    <Input
+                      id="contact-email"
+                      type="email"
+                      defaultValue="info@health.go.ke"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="contact-phone">Contact Phone</Label>
@@ -334,7 +397,10 @@ const Settings = () => {
                   </div>
                   <div>
                     <Label htmlFor="address">Physical Address</Label>
-                    <Input id="address" defaultValue="Afya House, Cathedral Road, Nairobi" />
+                    <Input
+                      id="address"
+                      defaultValue="Afya House, Cathedral Road, Nairobi"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -351,23 +417,36 @@ const Settings = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="annual-budget">Annual Budget Allocation</Label>
+                    <Label htmlFor="annual-budget">
+                      Annual Budget Allocation
+                    </Label>
                     <Input id="annual-budget" defaultValue="KES 25,000,000" />
                   </div>
                   <div>
-                    <Label htmlFor="monthly-limit">Monthly Spending Limit</Label>
+                    <Label htmlFor="monthly-limit">
+                      Monthly Spending Limit
+                    </Label>
                     <Input id="monthly-limit" defaultValue="KES 3,000,000" />
                   </div>
                   <div>
-                    <Label htmlFor="single-invoice-limit">Single Invoice Limit</Label>
-                    <Input id="single-invoice-limit" defaultValue="KES 1,000,000" />
+                    <Label htmlFor="single-invoice-limit">
+                      Single Invoice Limit
+                    </Label>
+                    <Input
+                      id="single-invoice-limit"
+                      defaultValue="KES 1,000,000"
+                    />
                   </div>
                   <div>
-                    <Label htmlFor="approval-threshold">Auto-Approval Threshold</Label>
+                    <Label htmlFor="approval-threshold">
+                      Auto-Approval Threshold
+                    </Label>
                     <Input id="approval-threshold" defaultValue="KES 100,000" />
                   </div>
                   <div>
-                    <Label htmlFor="budget-alert">Budget Alert Percentage</Label>
+                    <Label htmlFor="budget-alert">
+                      Budget Alert Percentage
+                    </Label>
                     <Select defaultValue="80">
                       <SelectTrigger>
                         <SelectValue />

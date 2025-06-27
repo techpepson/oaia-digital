@@ -1,14 +1,25 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Logo from '@/components/Logo';
-import { 
-  Bell, 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Logo from "@/components/Logo";
+import {
+  Bell,
   Search,
   Filter,
   Eye,
@@ -22,146 +33,165 @@ import {
   DollarSign,
   Users,
   Settings,
-  Trash2
-} from 'lucide-react';
+  Trash2,
+} from "lucide-react";
 
 const AuditorNotifications = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [priorityFilter, setPriorityFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
 
   const notifications = [
     {
-      id: 'NOT-2024-001',
-      title: 'High-Value Invoice Detected',
-      message: 'Invoice INV-2024-156 exceeds contract value by 40% (KES 850,000)',
-      type: 'anomaly',
-      priority: 'high',
-      status: 'unread',
-      timestamp: '2024-01-20 09:15',
-      agency: 'Ministry of Health',
-      relatedCase: 'AUD-2024-001',
+      id: "NOT-2024-001",
+      title: "High-Value Invoice Detected",
+      message:
+        "Invoice INV-2024-156 exceeds contract value by 40% (GHS 850,000)",
+      type: "anomaly",
+      priority: "high",
+      status: "unread",
+      timestamp: "2024-01-20 09:15",
+      agency: "Ministry of Health",
+      relatedCase: "AUD-2024-001",
       icon: AlertTriangle,
-      color: 'text-red-600',
-      bgColor: 'bg-red-50'
+      color: "text-red-600",
+      bgColor: "bg-red-50",
     },
     {
-      id: 'NOT-2024-002',
-      title: 'Potential Duplicate Payment',
-      message: 'Similar invoices from ABC Construction detected across multiple agencies',
-      type: 'duplicate',
-      priority: 'high',
-      status: 'unread',
-      timestamp: '2024-01-20 08:30',
-      agency: 'Multiple Agencies',
-      relatedCase: 'AUD-2024-001',
+      id: "NOT-2024-002",
+      title: "Potential Duplicate Payment",
+      message:
+        "Similar invoices from ABC Construction detected across multiple agencies",
+      type: "duplicate",
+      priority: "high",
+      status: "unread",
+      timestamp: "2024-01-20 08:30",
+      agency: "Multiple Agencies",
+      relatedCase: "AUD-2024-001",
       icon: AlertTriangle,
-      color: 'text-red-600',
-      bgColor: 'bg-red-50'
+      color: "text-red-600",
+      bgColor: "bg-red-50",
     },
     {
-      id: 'NOT-2024-003',
-      title: 'Audit Case Due for Review',
-      message: 'Audit case AUD-2024-002 requires senior auditor review',
-      type: 'deadline',
-      priority: 'medium',
-      status: 'read',
-      timestamp: '2024-01-19 16:45',
-      agency: 'Road Fund',
-      relatedCase: 'AUD-2024-002',
+      id: "NOT-2024-003",
+      title: "Audit Case Due for Review",
+      message: "Audit case AUD-2024-002 requires senior auditor review",
+      type: "deadline",
+      priority: "medium",
+      status: "read",
+      timestamp: "2024-01-19 16:45",
+      agency: "Road Fund",
+      relatedCase: "AUD-2024-002",
       icon: Clock,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
     },
     {
-      id: 'NOT-2024-004',
-      title: 'New Suspicious Activity Alert',
-      message: 'Unusual payment pattern detected for contractor Green Energy Corp',
-      type: 'pattern',
-      priority: 'medium',
-      status: 'unread',
-      timestamp: '2024-01-19 14:20',
-      agency: 'Ministry of Energy',
+      id: "NOT-2024-004",
+      title: "New Suspicious Activity Alert",
+      message:
+        "Unusual payment pattern detected for contractor Green Energy Corp",
+      type: "pattern",
+      priority: "medium",
+      status: "unread",
+      timestamp: "2024-01-19 14:20",
+      agency: "Ministry of Energy",
       relatedCase: null,
       icon: Zap,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50'
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50",
     },
     {
-      id: 'NOT-2024-005',
-      title: 'Monthly Compliance Report Ready',
-      message: 'January 2024 compliance summary report has been generated',
-      type: 'report',
-      priority: 'low',
-      status: 'read',
-      timestamp: '2024-01-19 10:00',
-      agency: 'All Agencies',
+      id: "NOT-2024-005",
+      title: "Monthly Compliance Report Ready",
+      message: "January 2024 compliance summary report has been generated",
+      type: "report",
+      priority: "low",
+      status: "read",
+      timestamp: "2024-01-19 10:00",
+      agency: "All Agencies",
       relatedCase: null,
       icon: CheckCircle,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      color: "text-green-600",
+      bgColor: "bg-green-50",
     },
     {
-      id: 'NOT-2024-006',
-      title: 'System Maintenance Scheduled',
-      message: 'Audit system maintenance scheduled for January 25, 2024 at 2:00 AM',
-      type: 'system',
-      priority: 'low',
-      status: 'read',
-      timestamp: '2024-01-18 12:00',
-      agency: 'System',
+      id: "NOT-2024-006",
+      title: "System Maintenance Scheduled",
+      message:
+        "Audit system maintenance scheduled for January 25, 2024 at 2:00 AM",
+      type: "system",
+      priority: "low",
+      status: "read",
+      timestamp: "2024-01-18 12:00",
+      agency: "System",
       relatedCase: null,
       icon: Settings,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
     },
     {
-      id: 'NOT-2024-007',
-      title: 'Budget Threshold Exceeded',
-      message: 'Ministry of Education has exceeded 85% of quarterly budget allocation',
-      type: 'threshold',
-      priority: 'medium',
-      status: 'archived',
-      timestamp: '2024-01-17 15:30',
-      agency: 'Ministry of Education',
+      id: "NOT-2024-007",
+      title: "Budget Threshold Exceeded",
+      message:
+        "Ministry of Education has exceeded 85% of quarterly budget allocation",
+      type: "threshold",
+      priority: "medium",
+      status: "archived",
+      timestamp: "2024-01-17 15:30",
+      agency: "Ministry of Education",
       relatedCase: null,
       icon: DollarSign,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
-    }
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+    },
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'unread': return 'bg-blue-100 text-blue-800';
-      case 'read': return 'bg-gray-100 text-gray-800';
-      case 'archived': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-gray-100 text-gray-800';
+      case "unread":
+        return "bg-blue-100 text-blue-800";
+      case "read":
+        return "bg-gray-100 text-gray-800";
+      case "archived":
+        return "bg-gray-100 text-gray-600";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800 border-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case "high":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "low":
+        return "bg-green-100 text-green-800 border-green-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
-  const filteredNotifications = notifications.filter(notification => {
-    const matchesSearch = notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         notification.message.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesPriority = priorityFilter === 'all' || notification.priority === priorityFilter;
-    const matchesStatus = statusFilter === 'all' || notification.status === statusFilter;
-    const matchesType = typeFilter === 'all' || notification.type === typeFilter;
-    
+  const filteredNotifications = notifications.filter((notification) => {
+    const matchesSearch =
+      notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      notification.message.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPriority =
+      priorityFilter === "all" || notification.priority === priorityFilter;
+    const matchesStatus =
+      statusFilter === "all" || notification.status === statusFilter;
+    const matchesType =
+      typeFilter === "all" || notification.type === typeFilter;
+
     return matchesSearch && matchesPriority && matchesStatus && matchesType;
   });
 
-  const unreadCount = notifications.filter(n => n.status === 'unread').length;
-  const highPriorityCount = notifications.filter(n => n.priority === 'high' && n.status === 'unread').length;
+  const unreadCount = notifications.filter((n) => n.status === "unread").length;
+  const highPriorityCount = notifications.filter(
+    (n) => n.priority === "high" && n.status === "unread"
+  ).length;
 
   return (
     <div className="min-h-screen bg-oaia-light">
@@ -192,7 +222,9 @@ const AuditorNotifications = () => {
               </Badge>
             )}
           </h1>
-          <p className="text-oaia-gray mt-1">Stay informed about critical audit events and system alerts</p>
+          <p className="text-oaia-gray mt-1">
+            Stay informed about critical audit events and system alerts
+          </p>
         </div>
 
         {/* Summary Cards */}
@@ -205,10 +237,12 @@ const AuditorNotifications = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-oaia-blue">{notifications.length}</div>
+              <div className="text-2xl font-bold text-oaia-blue">
+                {notifications.length}
+              </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
@@ -217,10 +251,12 @@ const AuditorNotifications = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{unreadCount}</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {unreadCount}
+              </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
@@ -229,10 +265,12 @@ const AuditorNotifications = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">{highPriorityCount}</div>
+              <div className="text-2xl font-bold text-red-600">
+                {highPriorityCount}
+              </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-oaia-gray flex items-center">
@@ -242,7 +280,7 @@ const AuditorNotifications = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gray-600">
-                {notifications.filter(n => n.status === 'archived').length}
+                {notifications.filter((n) => n.status === "archived").length}
               </div>
             </CardContent>
           </Card>
@@ -267,7 +305,7 @@ const AuditorNotifications = () => {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={priorityFilter} onValueChange={setPriorityFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Priority" />
@@ -306,9 +344,7 @@ const AuditorNotifications = () => {
                 </SelectContent>
               </Select>
 
-              <Button variant="outline">
-                Mark All Read
-              </Button>
+              <Button variant="outline">Mark All Read</Button>
             </div>
           </CardContent>
         </Card>
@@ -316,26 +352,45 @@ const AuditorNotifications = () => {
         {/* Notifications List */}
         <div className="space-y-4">
           {filteredNotifications.map((notification) => (
-            <Card key={notification.id} className={`hover:shadow-md transition-shadow ${notification.bgColor} ${notification.status === 'unread' ? 'border-l-4 border-l-blue-500' : ''}`}>
+            <Card
+              key={notification.id}
+              className={`hover:shadow-md transition-shadow ${
+                notification.bgColor
+              } ${
+                notification.status === "unread"
+                  ? "border-l-4 border-l-blue-500"
+                  : ""
+              }`}
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-4">
-                    <notification.icon className={`h-6 w-6 mt-1 ${notification.color}`} />
+                    <notification.icon
+                      className={`h-6 w-6 mt-1 ${notification.color}`}
+                    />
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <h3 className={`text-lg font-medium ${notification.status === 'unread' ? 'font-bold' : ''}`}>
+                        <h3
+                          className={`text-lg font-medium ${
+                            notification.status === "unread" ? "font-bold" : ""
+                          }`}
+                        >
                           {notification.title}
                         </h3>
-                        <Badge className={getPriorityColor(notification.priority)}>
+                        <Badge
+                          className={getPriorityColor(notification.priority)}
+                        >
                           {notification.priority.toUpperCase()}
                         </Badge>
                         <Badge className={getStatusColor(notification.status)}>
                           {notification.status.toUpperCase()}
                         </Badge>
                       </div>
-                      
-                      <p className="text-gray-700 mb-3">{notification.message}</p>
-                      
+
+                      <p className="text-gray-700 mb-3">
+                        {notification.message}
+                      </p>
+
                       <div className="flex items-center space-x-4 text-sm text-oaia-gray">
                         <span className="flex items-center">
                           <Clock className="h-4 w-4 mr-1" />
@@ -354,7 +409,7 @@ const AuditorNotifications = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 ml-4">
                     <Button size="sm" variant="outline">
                       <Eye className="h-4 w-4 mr-1" />
@@ -378,8 +433,12 @@ const AuditorNotifications = () => {
           <Card className="text-center py-12">
             <CardContent>
               <Bell className="h-12 w-12 mx-auto text-oaia-gray mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No notifications found</h3>
-              <p className="text-oaia-gray">Try adjusting your search criteria or filters.</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No notifications found
+              </h3>
+              <p className="text-oaia-gray">
+                Try adjusting your search criteria or filters.
+              </p>
             </CardContent>
           </Card>
         )}
