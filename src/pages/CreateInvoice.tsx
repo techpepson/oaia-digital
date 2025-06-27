@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -36,7 +37,7 @@ const CreateInvoice = () => {
   ];
 
   // Document type mapping for database
-  const documentTypeMapping: Record<string, string> = {
+  const documentTypeMapping: Record<string, 'certificate_incorporation' | 'memorandum_articles' | 'shareholding_structure' | 'company_profile' | 'directors_id' | 'company_address_proof' | 'regulatory_license' | 'financial_statements'> = {
     'Certificate of Incorporation': 'certificate_incorporation',
     'Memorandum & Articles of Association': 'memorandum_articles',
     'Shareholding Structure': 'shareholding_structure',
