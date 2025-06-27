@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,8 +10,14 @@ import { Badge } from '@/components/ui/badge';
 import Logo from '@/components/Logo';
 import { Upload, FileText, X, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCreateInvoice } from '@/hooks/useInvoices';
+import { supabase } from '@/integrations/supabase/client';
 
 const CreateInvoice = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const createInvoiceMutation = useCreateInvoice();
   const [currentStep, setCurrentStep] = useState(1);
   const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
   const [paymentTerms, setPaymentTerms] = useState<string>('');
@@ -71,10 +77,41 @@ const CreateInvoice = () => {
     setAdvanceAmount(invoiceAmount * (percentage / 100));
   };
 
-  const handleDocumentUpload = (docName: string) => {
-    if (!uploadedDocs.includes(docName)) {
-      setUploadedDocs([...uploadedDocs, docName]);
-      toast.success(`${docName} uploaded successfully`);
+  const handleDocumentUpload = async (docName: string) => {
+    if (!user) return;
+
+    // Simulate file upload
+    const file = new File(['dummy content'], `${docName}.pdf`, { type: 'application/pdf' });
+    const filePath = `${user.id}/${Date.now()}-${file.name}`;
+
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from('compliance-documents')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Save document record
+      const { error: dbError } = await supabase
+        .from('compliance_documents')
+        .insert({
+          user_id: user.id,
+          document_type: docName.toLowerCase().replace(/\s+/g, '_').replace(/[&]/g, ''),
+          file_name: file.name,
+          file_path: filePath,
+          file_size: file.size,
+          mime_type: file.type
+        });
+
+      if (dbError) throw dbError;
+
+      if (!uploadedDocs.includes(docName)) {
+        setUploadedDocs([...uploadedDocs, docName]);
+        toast.success(`${docName} uploaded successfully`);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(`Failed to upload ${docName}`);
     }
   };
 
@@ -83,7 +120,7 @@ const CreateInvoice = () => {
     toast.info(`${docName} removed`);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (currentStep === 1) {
@@ -101,10 +138,35 @@ const CreateInvoice = () => {
         toast.error('Please upload at least 5 required documents');
         return;
       }
-      toast.success('Invoice submitted successfully! You will receive a confirmation email shortly.');
-      setTimeout(() => {
-        window.location.href = '/dashboard/contractor';
-      }, 2000);
+
+      if (!user) {
+        toast.error('User not authenticated');
+        return;
+      }
+
+      try {
+        await createInvoiceMutation.mutateAsync({
+          contractor_id: user.id,
+          invoice_number: formData.invoiceNumber,
+          contract_reference: formData.contractReference,
+          service_description: formData.serviceDescription,
+          amount: parseFloat(formData.amount),
+          work_period: formData.workPeriod,
+          completion_date: formData.completionDate || null,
+          invoice_date: formData.invoiceDate,
+          due_date: formData.dueDate,
+          payment_terms: paymentTerms,
+          advance_percentage: advancePercentage,
+          advance_amount: advanceAmount,
+          status: 'submitted',
+          submitted_at: new Date().toISOString()
+        });
+
+        navigate('/contractor/invoices');
+      } catch (error) {
+        console.error('Error creating invoice:', error);
+        toast.error('Failed to create invoice');
+      }
     }
   };
 
@@ -122,7 +184,7 @@ const CreateInvoice = () => {
                 Back to Dashboard
               </Button>
             </Link>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => signOut()}>
               Logout
             </Button>
           </div>
@@ -428,8 +490,12 @@ const CreateInvoice = () => {
                   >
                     Back to Details
                   </Button>
-                  <Button type="submit" className="flex-1 bg-oaia-blue hover:bg-oaia-blue/90">
-                    Submit Invoice
+                  <Button 
+                    type="submit" 
+                    className="flex-1 bg-oaia-blue hover:bg-oaia-blue/90"
+                    disabled={createInvoiceMutation.isPending}
+                  >
+                    {createInvoiceMutation.isPending ? 'Submitting...' : 'Submit Invoice'}
                   </Button>
                 </div>
               </CardContent>

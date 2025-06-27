@@ -1,15 +1,18 @@
 
-import React, { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/components/Logo';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { signIn, user, profile, loading } = useAuth();
   const userType = searchParams.get('type') || 'contractor';
   
   const [formData, setFormData] = useState({
@@ -17,7 +20,16 @@ const Login = () => {
     password: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user && profile) {
+      // Redirect to appropriate dashboard based on user role
+      navigate(`/dashboard/${profile.user_role}`);
+    }
+  }, [user, profile, loading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.email || !formData.password) {
@@ -25,13 +37,30 @@ const Login = () => {
       return;
     }
 
-    // Simulate login
-    toast.success('Login successful! Redirecting...');
-    
-    // Route to appropriate dashboard based on user type
-    setTimeout(() => {
-      window.location.href = `/dashboard/${userType}`;
-    }, 1500);
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await signIn(formData.email, formData.password);
+      
+      if (error) {
+        console.error('Login error:', error);
+        
+        if (error.message.includes('Invalid login credentials')) {
+          toast.error('Invalid email or password. Please check your credentials.');
+        } else if (error.message.includes('Email not confirmed')) {
+          toast.error('Please check your email and click the confirmation link before signing in.');
+        } else {
+          toast.error('Login failed: ' + error.message);
+        }
+      } else {
+        toast.success('Login successful! Redirecting...');
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      toast.error('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getUserTypeLabel = (type: string) => {
@@ -43,6 +72,14 @@ const Login = () => {
       default: return 'User';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-oaia-blue"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-oaia-light via-white to-oaia-light flex items-center justify-center p-4">
@@ -75,6 +112,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="focus:ring-oaia-blue focus:border-oaia-blue"
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -87,11 +125,16 @@ const Login = () => {
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
                   className="focus:ring-oaia-blue focus:border-oaia-blue"
+                  disabled={isSubmitting}
                 />
               </div>
               
-              <Button type="submit" className="w-full bg-oaia-blue hover:bg-oaia-blue/90">
-                Sign In
+              <Button 
+                type="submit" 
+                className="w-full bg-oaia-blue hover:bg-oaia-blue/90"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
             
