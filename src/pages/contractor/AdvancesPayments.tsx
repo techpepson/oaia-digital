@@ -86,14 +86,14 @@ const AdvancesPayments = () => {
 
   const summaryStats = [
     {
-      title: "Total Advances Received",
+      title: "Total Advance Payments",
       amount: "GHS 845,000",
       change: "+15%",
       changeType: "positive",
       icon: TrendingUp,
     },
     {
-      title: "Outstanding Advances",
+      title: "Outstanding Advance Payments",
       amount: "GHS 84,000",
       change: "1 pending",
       changeType: "neutral",
@@ -105,13 +105,6 @@ const AdvancesPayments = () => {
       change: "+8%",
       changeType: "positive",
       icon: CheckCircle,
-    },
-    {
-      title: "Repayments Made",
-      amount: "GHS 15,000",
-      change: "1 this month",
-      changeType: "neutral",
-      icon: AlertCircle,
     },
   ];
 

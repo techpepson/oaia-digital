@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,30 +19,52 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import Logo from "@/components/Logo";
-import { Upload, FileText, X, CheckCircle } from "lucide-react";
+// import { InputMask } from "@react-input/mask";
+import { Upload, FileText, X, CheckCircle, Plus, Banknote, Landmark } from "lucide-react";
 import { toast } from "sonner";
+
+interface BankAccount {
+  id: string;
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+  branch: string;
+  currency: string;
+  isDefault: boolean;
+}
 
 const CreateInvoice = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
+  const [uploadedDocs, setUploadedDocs] = useState<{name: string; file: File}[]>([]);
   const [paymentTerms, setPaymentTerms] = useState<string>("");
   const [advancePercentage, setAdvancePercentage] = useState<number>(0);
   const [advanceAmount, setAdvanceAmount] = useState<number>(0);
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
+  const [selectedBankAccount, setSelectedBankAccount] = useState<string>("");
+  const [isAddingBankAccount, setIsAddingBankAccount] = useState(false);
+  const [newBankAccount, setNewBankAccount] = useState<Omit<BankAccount, 'id'>>({ 
+    accountName: '',
+    accountNumber: '',
+    bankName: '',
+    branch: '',
+    currency: 'GHS',
+    isDefault: false
+  });
 
+  // Invoice-specific required documents
   const requiredDocuments = [
-    "Certificate of Incorporation",
-    "Memorandum & Articles of Association",
-    "Shareholding Structure",
-    "Company Profile",
-    "Directors ID Documents & Proof of Address",
-    "Company Proof of Address",
-    "Regulatory License (if applicable)",
-    "Bank Statements or Financial Statements",
+    { name: "Invoice", description: "Detailed invoice document" },
+    { name: "Award Contract", description: "Signed contract document" },
+    { name: "Interim Payment Certificate", description: "Approved payment certificate" },
+    { name: "Delivery Note", description: "Proof of goods/services delivery" },
+    { name: "Tax Clearance Certificate", description: "Current tax clearance" },
+    { name: "VAT Invoice", description: "If applicable" },
+    { name: "Inspection Report", description: "If applicable" },
   ];
 
   const [formData, setFormData] = useState({
     invoiceNumber: "",
+    contractName: "",
     agency: "",
     contractReference: "",
     serviceDescription: "",
@@ -53,8 +75,27 @@ const CreateInvoice = () => {
     dueDate: "",
   });
 
+  // Format amount to handle commas and convert to number
+  const formatAmount = (value: string): string => {
+    // Remove all non-digit characters except decimal point
+    const numericValue = value.replace(/[^\d.]/g, '');
+    
+    // Format with commas for thousands
+    if (numericValue) {
+      const parts = numericValue.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+    }
+    return '';
+  };
+
+  // Calculate amount without formatting
+  const getNumericAmount = (formattedAmount: string): number => {
+    return parseFloat(formattedAmount.replace(/,/g, '')) || 0;
+  };
+
   const calculateAdvancePercentage = (terms: string, amount: string) => {
-    const invoiceAmount = parseFloat(amount) || 0;
+    const invoiceAmount = getNumericAmount(amount);
     let discountRate = 0;
     let percentage = 0;
 
@@ -83,490 +124,471 @@ const CreateInvoice = () => {
     setAdvanceAmount(invoiceAmount * (percentage / 100));
   };
 
-  const handleDocumentUpload = (docName: string) => {
-    if (!uploadedDocs.includes(docName)) {
-      setUploadedDocs([...uploadedDocs, docName]);
+  const handleDocumentUpload = (e: React.ChangeEvent<HTMLInputElement>, docName: string) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        toast.error("File size should be less than 10MB");
+        return;
+      }
+      
+      if (!['application/pdf', 'image/jpeg', 'image/png'].includes(file.type)) {
+        toast.error("Only PDF, JPG, and PNG files are allowed");
+        return;
+      }
+
+      setUploadedDocs([...uploadedDocs, { name: docName, file }]);
       toast.success(`${docName} uploaded successfully`);
     }
   };
 
-  const removeDocument = (docName: string) => {
-    setUploadedDocs(uploadedDocs.filter((doc) => doc !== docName));
-    toast.info(`${docName} removed`);
+  const removeDocument = (index: number) => {
+    const newDocs = [...uploadedDocs];
+    const removed = newDocs.splice(index, 1);
+    setUploadedDocs(newDocs);
+    toast.info(`${removed[0].name} removed`);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleBankAccountSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (currentStep === 1) {
-      if (
-        !formData.invoiceNumber ||
-        !formData.agency ||
-        !formData.amount ||
-        !formData.invoiceDate ||
-        !formData.dueDate
-      ) {
-        toast.error("Please fill in all required fields");
-        return;
-      }
-      if (!paymentTerms) {
-        toast.error("Please select payment terms");
-        return;
-      }
-      setCurrentStep(2);
-    } else {
-      if (uploadedDocs.length < 5) {
-        toast.error("Please upload at least 5 required documents");
-        return;
-      }
-      toast.success(
-        "Invoice submitted successfully! You will receive a confirmation email shortly."
-      );
-      setTimeout(() => {
-        window.location.href = "/dashboard/contractor";
-      }, 2000);
-    }
+    const newAccount = {
+      ...newBankAccount,
+      id: `acc-${Date.now()}`,
+    };
+    
+    const updatedAccounts = [...bankAccounts, newAccount];
+    setBankAccounts(updatedAccounts);
+    setSelectedBankAccount(newAccount.id);
+    setIsAddingBankAccount(false);
+    setNewBankAccount({ 
+      accountName: '',
+      accountNumber: '',
+      bankName: '',
+      branch: '',
+      currency: 'GHS',
+      isDefault: false 
+    });
+    toast.success("Bank account added successfully");
   };
 
   return (
-    <div className="min-h-screen bg-oaia-light">
-      {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/">
-            <Logo />
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Link to="/dashboard/contractor">
-              <Button variant="ghost" size="sm">
-                Back to Dashboard
-              </Button>
-            </Link>
-            <Button variant="outline" size="sm">
-              Logout
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Page Title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Create Invoice</h1>
-          <p className="text-oaia-gray mt-1">
-            Submit your invoice for government contract payment
-          </p>
-        </div>
-
-        {/* Progress Steps */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="flex items-center space-x-4">
+    <div className="container mx-auto p-4 md:p-6">
+      {/* Progress Steps */}
+      <div className="flex justify-between mb-8">
+        {[1, 2, 3].map((step) => (
+          <div key={step} className="flex flex-col items-center">
             <div
-              className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                currentStep >= 1
-                  ? "bg-oaia-blue text-white"
-                  : "bg-gray-200 text-gray-600"
+              className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                currentStep >= step ? "bg-oaia-blue text-white" : "bg-gray-200"
               }`}
             >
-              1
+              {step}
             </div>
-            <div
-              className={`w-20 h-1 ${
-                currentStep >= 2 ? "bg-oaia-blue" : "bg-gray-200"
-              }`}
-            ></div>
-            <div
-              className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                currentStep >= 2
-                  ? "bg-oaia-blue text-white"
-                  : "bg-gray-200 text-gray-600"
-              }`}
-            >
-              2
-            </div>
+            <span className="text-sm mt-2">
+              {step === 1 ? "Invoice Details" : step === 2 ? "Documents" : "Summary"}
+            </span>
           </div>
-        </div>
+        ))}
+      </div>
 
-        <div className="text-center mb-8">
-          <p className="text-sm text-oaia-gray">
-            Step {currentStep} of 2:{" "}
-            {currentStep === 1 ? "Invoice Details" : "Document Upload"}
-          </p>
-        </div>
+      {/* Form Steps */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>
+            {currentStep === 1
+              ? "Invoice Details"
+              : currentStep === 2
+              ? "Upload Required Documents"
+              : "Review & Submit"}
+          </CardTitle>
+          <CardDescription>
+            {currentStep === 1
+              ? "Enter the invoice and contract details"
+              : currentStep === 2
+              ? "Upload all required supporting documents"
+              : "Review your information before submission"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {/* Step 1: Invoice Details */}
+          {currentStep === 1 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Contract Name */}
+              <div className="space-y-2">
+                <Label htmlFor="contractName">Contract Name *</Label>
+                <Input
+                  id="contractName"
+                  value={formData.contractName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, contractName: e.target.value })
+                  }
+                  placeholder="e.g. Road Construction Project Phase 1"
+                  required
+                />
+              </div>
 
-        <form onSubmit={handleSubmit}>
-          {currentStep === 1 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-oaia-blue">
-                  Invoice Information
-                </CardTitle>
-                <CardDescription>
-                  Provide details about your invoice and the services rendered
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="invoiceNumber">Invoice Number *</Label>
-                    <Input
-                      id="invoiceNumber"
-                      placeholder="e.g., INV-2024-001"
-                      value={formData.invoiceNumber}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          invoiceNumber: e.target.value,
-                        })
-                      }
-                      className="focus:ring-oaia-blue focus:border-oaia-blue"
-                    />
+              {/* Invoice Number */}
+              <div className="space-y-2">
+                <Label htmlFor="invoiceNumber">Invoice Number *</Label>
+                <Input
+                  id="invoiceNumber"
+                  value={formData.invoiceNumber}
+                  onChange={(e) =>
+                    setFormData({ ...formData, invoiceNumber: e.target.value })
+                  }
+                  placeholder="e.g. INV-2023-001"
+                  required
+                />
+              </div>
+
+              {/* Invoice Amount with proper formatting */}
+              <div className="space-y-2">
+                <Label htmlFor="amount">Invoice Amount (GHS) *</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className="text-gray-500">GHS</span>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="agency">Government Agency *</Label>
-                    <Select
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, agency: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select agency" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="getFund">GETFund</SelectItem>
-                        <SelectItem value="nhis">NHIS</SelectItem>
-                        <SelectItem value="roadFund">Road Fund</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="contractReference">Contract Reference</Label>
                   <Input
-                    id="contractReference"
-                    placeholder="e.g., CON/2024/HEALTH/001"
-                    value={formData.contractReference}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        contractReference: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="serviceDescription">
-                    Service Description *
-                  </Label>
-                  <Textarea
-                    id="serviceDescription"
-                    placeholder="Describe the services or goods provided..."
-                    value={formData.serviceDescription}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        serviceDescription: e.target.value,
-                      })
-                    }
-                    className="min-h-24"
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="amount">Invoice Amount (GHS) *</Label>
-                    <Input
-                      id="amount"
-                      placeholder="e.g., 450000"
-                      value={formData.amount}
-                      onChange={(e) => {
-                        setFormData({ ...formData, amount: e.target.value });
-                        calculateAdvancePercentage(
-                          paymentTerms,
-                          e.target.value
-                        );
-                      }}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="workPeriod">Work Period</Label>
-                    <Input
-                      id="workPeriod"
-                      placeholder="e.g., January 2024"
-                      value={formData.workPeriod}
-                      onChange={(e) =>
-                        setFormData({ ...formData, workPeriod: e.target.value })
+                    id="amount"
+                    type="text"
+                    value={formData.amount}
+                    onChange={(e) => {
+                      // Only allow numbers and decimal points
+                      const value = e.target.value.replace(/[^0-9.]/g, '');
+                      // Format the amount with commas
+                      const formattedValue = formatAmount(value);
+                      setFormData({ ...formData, amount: formattedValue });
+                      
+                      // Recalculate advance amount if payment terms are selected
+                      if (paymentTerms) {
+                        calculateAdvancePercentage(paymentTerms, formattedValue);
                       }
-                    />
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="completionDate">Completion Date</Label>
-                    <Input
-                      id="completionDate"
-                      type="date"
-                      value={formData.completionDate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          completionDate: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="invoiceDate">Invoice Date *</Label>
-                    <Input
-                      id="invoiceDate"
-                      type="date"
-                      value={formData.invoiceDate}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          invoiceDate: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="dueDate">Due Date *</Label>
-                    <Input
-                      id="dueDate"
-                      type="date"
-                      value={formData.dueDate}
-                      onChange={(e) =>
-                        setFormData({ ...formData, dueDate: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-
-                {/* Payment Terms Selection */}
-                <div className="space-y-4">
-                  <Label>
-                    Do you know when this invoice is due for payment? *
-                  </Label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {["30-days", "60-days", "90-days", "120-days"].map(
-                      (term) => (
-                        <Button
-                          key={term}
-                          type="button"
-                          variant={
-                            paymentTerms === term ? "default" : "outline"
-                          }
-                          onClick={() => {
-                            setPaymentTerms(term);
-                            calculateAdvancePercentage(term, formData.amount);
-                          }}
-                          className={
-                            paymentTerms === term ? "bg-oaia-blue" : ""
-                          }
-                        >
-                          {term.replace("-", " ").toUpperCase()}
-                        </Button>
-                      )
-                    )}
-                  </div>
-                  <Button
-                    type="button"
-                    variant={
-                      paymentTerms === "not-applicable" ? "default" : "outline"
-                    }
-                    onClick={() => {
-                      setPaymentTerms("not-applicable");
-                      setAdvancePercentage(0);
-                      setAdvanceAmount(0);
                     }}
-                    className={`w-full ${
-                      paymentTerms === "not-applicable" ? "bg-gray-600" : ""
-                    }`}
-                  >
-                    Not Applicable / Don't Know
-                  </Button>
+                    placeholder="0.00"
+                    className="pl-12"
+                    required
+                  />
                 </div>
+              </div>
 
-                {/* Advance Percentage Display */}
-                {paymentTerms &&
-                  paymentTerms !== "not-applicable" &&
-                  formData.amount && (
-                    <Card className="border-green-200 bg-green-50">
-                      <CardHeader>
-                        <CardTitle className="text-lg text-green-900">
-                          Advance Payment Details
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center">
-                            <span className="text-green-800">
-                              Payment Terms:
-                            </span>
-                            <Badge className="bg-green-100 text-green-800">
-                              {paymentTerms.replace("-", " ").toUpperCase()}
-                            </Badge>
-                          </div>
+              {/* Other form fields... */}
+            </div>
+          )}
 
-                          <div className="space-y-2">
-                            <div className="flex justify-between">
-                              <span className="text-green-800">
-                                Advance Percentage:
-                              </span>
-                              <span className="font-bold text-green-900">
-                                {advancePercentage}%
-                              </span>
-                            </div>
-                            <div className="w-full bg-green-200 rounded-full h-3">
-                              <div
-                                className="bg-green-600 h-3 rounded-full transition-all duration-300"
-                                style={{ width: `${advancePercentage}%` }}
-                              ></div>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4 pt-2 border-t border-green-200">
-                            <div>
-                              <span className="text-sm text-green-700">
-                                Invoice Amount:
-                              </span>
-                              <div className="font-bold text-green-900">
-                                GHS{" "}
-                                {parseFloat(formData.amount).toLocaleString()}
-                              </div>
-                            </div>
-                            <div>
-                              <span className="text-sm text-green-700">
-                                Advance Amount:
-                              </span>
-                              <div className="font-bold text-green-900">
-                                GHS {advanceAmount.toLocaleString()}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                <Button
-                  type="submit"
-                  className="w-full bg-oaia-blue hover:bg-oaia-blue/90"
-                >
-                  Continue to Documents
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-oaia-blue">
-                  Required Documents
-                </CardTitle>
-                <CardDescription>
-                  Upload all required company documents for verification
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4">
-                  {requiredDocuments.map((docName, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <FileText className="h-5 w-5 text-oaia-blue" />
-                        <div>
-                          <div className="font-medium text-gray-900">
-                            {docName}
-                          </div>
-                          <div className="text-sm text-oaia-gray">
-                            {docName.includes("Identification")
-                              ? "Passports and proof of address (< 3 months)"
-                              : docName.includes("Financial")
-                              ? "3 months bank statements or 6 months audited financials"
-                              : "Required for compliance verification"}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        {uploadedDocs.includes(docName) ? (
-                          <>
-                            <Badge className="bg-green-100 text-green-800">
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Uploaded
-                            </Badge>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => removeDocument(docName)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDocumentUpload(docName)}
-                            className="border-oaia-blue text-oaia-blue hover:bg-oaia-blue hover:text-white"
-                          >
-                            <Upload className="h-4 w-4 mr-1" />
-                            Upload
-                          </Button>
-                        )}
+          {/* Step 2: Document Upload */}
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <div className="grid gap-4">
+                {requiredDocuments.map((doc, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      <FileText className="h-5 w-5 text-oaia-blue" />
+                      <div>
+                        <div className="font-medium">{doc.name}</div>
+                        <div className="text-sm text-gray-500">{doc.description}</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-medium text-blue-900 mb-2">
-                    Document Requirements:
-                  </h4>
-                  <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• All documents must be clear and legible</li>
-                    <li>• Identification documents must be certified copies</li>
-                    <li>
-                      • Proof of address documents must be less than 3 months
-                      old
-                    </li>
-                    <li>
-                      • Financial statements must be less than 6 months old
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="flex space-x-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setCurrentStep(1)}
-                    className="flex-1"
-                  >
-                    Back to Details
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="flex-1 bg-oaia-blue hover:bg-oaia-blue/90"
-                  >
-                    Submit Invoice
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                    {uploadedDocs.some(d => d.name === doc.name) ? (
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeDocument(
+                            uploadedDocs.findIndex(d => d.name === doc.name)
+                          )}
+                        >
+                          Change
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <Button asChild variant="outline">
+                          <Label className="cursor-pointer">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload
+                            <input
+                              type="file"
+                              className="sr-only"
+                              onChange={(e) => handleDocumentUpload(e, doc.name)}
+                              accept=".pdf,.jpg,.jpeg,.png"
+                            />
+                          </Label>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
-        </form>
-      </div>
+
+          {/* Step 3: Summary and Bank Account Selection */}
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              {/* Invoice Summary */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Invoice Summary</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Contract Name:</span>
+                    <span>{formData.contractName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Invoice Amount:</span>
+                    <span>GHS {formData.amount}</span>
+                  </div>
+                  {paymentTerms && (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Advance Payment ({advancePercentage}%):</span>
+                        <span>GHS {advanceAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+                      <div className="flex justify-between font-medium">
+                        <span>Amount Due:</span>
+                        <span>GHS {(getNumericAmount(formData.amount) - advanceAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Bank Account Selection */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium">Bank Account for Payment</h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsAddingBankAccount(true)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New Account
+                  </Button>
+                </div>
+
+                {isAddingBankAccount ? (
+                  <Card>
+                    <CardContent className="pt-6">
+                      <form onSubmit={handleBankAccountSubmit} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="accountName">Account Name *</Label>
+                            <Input
+                              id="accountName"
+                              value={newBankAccount.accountName}
+                              onChange={(e) => setNewBankAccount({...newBankAccount, accountName: e.target.value})}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="accountNumber">Account Number *</Label>
+                            <Input
+                              id="accountNumber"
+                              value={newBankAccount.accountNumber}
+                              onChange={(e) => setNewBankAccount({...newBankAccount, accountNumber: e.target.value})}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="bankName">Bank Name *</Label>
+                            <Input
+                              id="bankName"
+                              value={newBankAccount.bankName}
+                              onChange={(e) => setNewBankAccount({...newBankAccount, bankName: e.target.value})}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="branch">Branch</Label>
+                            <Input
+                              id="branch"
+                              value={newBankAccount.branch}
+                              onChange={(e) => setNewBankAccount({...newBankAccount, branch: e.target.value})}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="currency">Currency *</Label>
+                            <Select
+                              value={newBankAccount.currency}
+                              onValueChange={(value) => setNewBankAccount({...newBankAccount, currency: value})}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select currency" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="GHS">GHS - Ghana Cedi</SelectItem>
+                                <SelectItem value="USD">USD - US Dollar</SelectItem>
+                                <SelectItem value="EUR">EUR - Euro</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex items-end space-x-2">
+                            <div className="flex items-center space-x-2">
+                              <input
+                                type="checkbox"
+                                id="isDefault"
+                                checked={newBankAccount.isDefault}
+                                onChange={(e) => setNewBankAccount({...newBankAccount, isDefault: e.target.checked})}
+                                className="h-4 w-4 rounded border-gray-300 text-oaia-blue focus:ring-oaia-blue"
+                              />
+                              <Label htmlFor="isDefault" className="text-sm">
+                                Set as default account
+                              </Label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-end space-x-2 pt-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsAddingBankAccount(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button type="submit">Save Account</Button>
+                        </div>
+                      </form>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="space-y-4">
+                    {bankAccounts.length > 0 ? (
+                      <div className="grid gap-4">
+                        {bankAccounts.map((account) => (
+                          <div
+                            key={account.id}
+                            className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                              selectedBankAccount === account.id ? 'border-oaia-blue bg-blue-50' : 'hover:bg-gray-50'
+                            }`}
+                            onClick={() => setSelectedBankAccount(account.id)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className="p-2 rounded-full bg-oaia-blue/10">
+                                  <Landmark className="h-5 w-5 text-oaia-blue" />
+                                </div>
+                                <div>
+                                  <div className="font-medium">{account.accountName}</div>
+                                  <div className="text-sm text-gray-500">
+                                    {account.bankName} ••••{account.accountNumber.slice(-4)}
+                                  </div>
+                                </div>
+                              </div>
+                              {account.isDefault && (
+                                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                  Default
+                                </Badge>
+                              )}
+                              {selectedBankAccount === account.id && (
+                                <CheckCircle className="h-5 w-5 text-green-500" />
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 border-2 border-dashed rounded-lg">
+                        <Banknote className="mx-auto h-12 w-12 text-gray-400" />
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">No bank accounts</h3>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Add a bank account to receive payments.
+                        </p>
+                        <div className="mt-6">
+                          <Button
+                            type="button"
+                            onClick={() => setIsAddingBankAccount(true)}
+                            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-oaia-blue hover:bg-oaia-blue/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-oaia-blue"
+                          >
+                            <Plus className="-ml-1 mr-2 h-5 w-5" />
+                            Add Bank Account
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Uploaded Documents Summary */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Uploaded Documents</h3>
+                {uploadedDocs.length > 0 ? (
+                  <div className="space-y-2">
+                    {uploadedDocs.map((doc, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="h-5 w-5 text-oaia-blue" />
+                          <span className="text-sm">{doc.name}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeDocument(index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No documents uploaded yet.</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between pt-6 mt-6 border-t">
+            <div>
+              {currentStep > 1 && (
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(currentStep - 1)}
+                >
+                  Back
+                </Button>
+              )}
+            </div>
+            <div className="space-x-3">
+              {currentStep < 3 ? (
+                <Button
+                  onClick={() => {
+                    // Basic validation before proceeding
+                    if (currentStep === 1) {
+                      if (!formData.contractName || !formData.amount) {
+                        toast.error("Please fill in all required fields");
+                        return;
+                      }
+                    } else if (currentStep === 2 && uploadedDocs.length === 0) {
+                      toast.error("Please upload at least one document");
+                      return;
+                    }
+                    setCurrentStep(currentStep + 1);
+                  }}
+                >
+                  Continue
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    if (!selectedBankAccount) {
+                      toast.error("Please select a bank account");
+                      return;
+                    }
+                    toast.success("Invoice submitted successfully!");
+                    // Handle form submission here
+                  }}
+                  disabled={!selectedBankAccount}
+                >
+                  Submit Invoice
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

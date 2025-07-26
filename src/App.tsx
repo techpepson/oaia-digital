@@ -16,6 +16,7 @@ import Notifications from "./pages/contractor/Notifications";
 import AccountSettings from "./pages/contractor/AccountSettings";
 import ReportsExports from "./pages/contractor/ReportsExports";
 import AdvancesPayments from "./pages/contractor/AdvancesPayments";
+import BankDetails from "./pages/contractor/BankDetails";
 import NotFound from "./pages/NotFound";
 import PendingInvoices from "./pages/agency/PendingInvoices";
 import ApprovedInvoices from "./pages/agency/ApprovedInvoices";
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/contractor/settings" element={<AccountSettings />} />
           <Route path="/contractor/reports" element={<ReportsExports />} />
           <Route path="/contractor/advances" element={<AdvancesPayments />} />
+          <Route path="/contractor/bank-details" element={<BankDetails />} />
           <Route path="/agency/payments" element={<Payments />} />
           <Route path="/agency/fund-requests" element={<FundRequests />} />
           <Route

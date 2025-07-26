@@ -290,8 +290,8 @@ const InvoiceList = () => {
                     <TableHead>Invoice ID</TableHead>
                     <TableHead>Project</TableHead>
                     <TableHead>Agency</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Advance</TableHead>
+                    <TableHead>Invoice Amount</TableHead>
+                    <TableHead>Advance Amount</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>

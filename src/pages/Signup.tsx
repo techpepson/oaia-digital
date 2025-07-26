@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -29,17 +28,10 @@ const Signup = () => {
     primaryRegion: '',
     primaryAgency: '',
     
-    // Step 3: Bank Details (contractors only)
-    bankName: '',
-    accountNumber: '',
-    accountName: '',
-    branchCode: '',
-    branchName: '',
-    
     agreeToTerms: false
   });
 
-  const totalSteps = userType === 'contractor' ? 3 : 2;
+  const totalSteps = userType === 'contractor' ? 2 : 2; 
   const progress = (currentStep / totalSteps) * 100;
 
   const handleNext = (e: React.FormEvent) => {
@@ -56,25 +48,11 @@ const Signup = () => {
       }
       setCurrentStep(2);
     } else if (currentStep === 2) {
-      if (userType === 'contractor') {
-        if (!formData.businessType) {
-          toast.error('Please select your business type');
-          return;
-        }
-        setCurrentStep(3);
-      } else {
-        if (!formData.agreeToTerms) {
-          toast.error('Please agree to the terms and conditions');
-          return;
-        }
-        handleSubmit();
-      }
-    } else if (currentStep === 3) {
-      if (!formData.bankName || !formData.accountNumber || !formData.branchCode) {
-        toast.error('Please fill in all bank details');
+      if (userType === 'contractor' && !formData.businessType) {
+        toast.error('Please select your business type');
         return;
       }
-      if (!formData.agreeToTerms) {
+      if (userType !== 'contractor' && !formData.agreeToTerms) {
         toast.error('Please agree to the terms and conditions');
         return;
       }
@@ -123,12 +101,10 @@ const Signup = () => {
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center text-oaia-blue">
-              {currentStep === 1 ? 'Basic Information' : 
-               currentStep === 2 ? 'Business Details' : 'Bank Details'}
+              {currentStep === 1 ? 'Basic Information' : 'Business Details'}
             </CardTitle>
             <CardDescription className="text-center">
-              {currentStep === 1 ? 'Enter your basic information' :
-               currentStep === 2 ? 'Tell us about your business' : 'Add your banking information'}
+              {currentStep === 1 ? 'Enter your basic information' : 'Tell us about your business'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -201,10 +177,13 @@ const Signup = () => {
               {/* Step 2: Business Details */}
               {currentStep === 2 && (
                 <>
-                  {userType === 'contractor' && (
+                  {userType === 'contractor' ? (
                     <div className="space-y-2">
                       <Label htmlFor="businessType">Business Type *</Label>
-                      <Select onValueChange={(value) => setFormData({...formData, businessType: value})}>
+                      <Select 
+                        onValueChange={(value) => setFormData({...formData, businessType: value})}
+                        value={formData.businessType}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select your business type" />
                         </SelectTrigger>
@@ -216,9 +195,7 @@ const Signup = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  )}
-
-                  {userType !== 'contractor' && (
+                  ) : (
                     <>
                       <div className="space-y-2">
                         <Label htmlFor="primaryRegion">Primary Region</Label>
@@ -258,98 +235,6 @@ const Signup = () => {
                       </div>
                     </>
                   )}
-
-                  {userType !== 'contractor' && (
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="terms" 
-                        checked={formData.agreeToTerms}
-                        onCheckedChange={(checked) => setFormData({...formData, agreeToTerms: checked as boolean})}
-                      />
-                      <Label htmlFor="terms" className="text-sm text-oaia-gray">
-                        I agree to the{' '}
-                        <a href="#" className="text-oaia-blue hover:text-oaia-orange">
-                          Terms & Conditions
-                        </a>{' '}
-                        and{' '}
-                        <a href="#" className="text-oaia-blue hover:text-oaia-orange">
-                          Privacy Policy
-                        </a>
-                      </Label>
-                    </div>
-                  )}
-                </>
-              )}
-
-              {/* Step 3: Bank Details (Contractors only) */}
-              {currentStep === 3 && userType === 'contractor' && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="bankName">Bank Name *</Label>
-                    <Select onValueChange={(value) => setFormData({...formData, bankName: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your bank" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gcb">GCB Bank</SelectItem>
-                        <SelectItem value="ecobank">Ecobank Ghana</SelectItem>
-                        <SelectItem value="standard-chartered">Standard Chartered</SelectItem>
-                        <SelectItem value="absa">Absa Bank Ghana</SelectItem>
-                        <SelectItem value="access-bank">Access Bank Ghana</SelectItem>
-                        <SelectItem value="fidelity">Fidelity Bank Ghana</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="accountNumber">Account Number *</Label>
-                    <Input
-                      id="accountNumber"
-                      type="text"
-                      placeholder="Enter your account number"
-                      value={formData.accountNumber}
-                      onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
-                      className="focus:ring-oaia-blue focus:border-oaia-blue"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="accountName">Account Name</Label>
-                    <Input
-                      id="accountName"
-                      type="text"
-                      placeholder="Enter account name"
-                      value={formData.accountName}
-                      onChange={(e) => setFormData({...formData, accountName: e.target.value})}
-                      className="focus:ring-oaia-blue focus:border-oaia-blue"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="branchCode">Branch Code *</Label>
-                      <Input
-                        id="branchCode"
-                        type="text"
-                        placeholder="e.g., 001"
-                        value={formData.branchCode}
-                        onChange={(e) => setFormData({...formData, branchCode: e.target.value})}
-                        className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="branchName">Branch Name *</Label>
-                      <Input
-                        id="branchName"
-                        type="text"
-                        placeholder="e.g., Accra Main"
-                        value={formData.branchName}
-                        onChange={(e) => setFormData({...formData, branchName: e.target.value})}
-                        className="focus:ring-oaia-blue focus:border-oaia-blue"
-                      />
-                    </div>
-                  </div>
 
                   <div className="flex items-center space-x-2">
                     <Checkbox 

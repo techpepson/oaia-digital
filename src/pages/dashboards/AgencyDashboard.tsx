@@ -414,18 +414,14 @@ const AgencyDashboard = () => {
                           {invoice.date}
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          className="bg-oaia-green hover:bg-oaia-green/90"
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Quick Approve
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          Review
-                        </Button>
-                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="border-oaia-blue text-oaia-blue hover:bg-oaia-blue/10"
+                      >
+                        <FileText className="h-4 w-4 mr-1" />
+                        Review Details
+                      </Button>
                     </div>
                   </div>
                 ))}
