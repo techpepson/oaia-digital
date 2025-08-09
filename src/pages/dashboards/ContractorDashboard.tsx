@@ -114,9 +114,11 @@ const ContractorDashboard = () => {
               <span className="text-sm text-oaia-gray">
                 Contractor Dashboard
               </span>
-              <Button variant="outline" size="sm">
-                Logout
-              </Button>
+              <Link to="/">
+                <Button variant="outline" size="sm">
+                  Logout
+                </Button>
+              </Link>
             </div>
           </div>
         </header>

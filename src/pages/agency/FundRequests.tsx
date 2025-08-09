@@ -33,7 +33,7 @@ const FundRequests = () => {
       id: 'FR-2024-001',
       requestDate: '2024-01-15',
       amount: 2500000,
-      currency: 'KES',
+      currency: 'GHS',
       purpose: 'Approved invoices payment batch #1',
       invoicesCount: 5,
       status: 'approved',
@@ -45,7 +45,7 @@ const FundRequests = () => {
       id: 'FR-2024-002',
       requestDate: '2024-01-14',
       amount: 1800000,
-      currency: 'KES',
+      currency: 'GHS',
       purpose: 'Road maintenance projects payment',
       invoicesCount: 3,
       status: 'pending',
@@ -57,7 +57,7 @@ const FundRequests = () => {
       id: 'FR-2024-003',
       requestDate: '2024-01-13',
       amount: 900000,
-      currency: 'KES',
+      currency: 'GHS',
       purpose: 'IT services and equipment procurement',
       invoicesCount: 2,
       status: 'processing',
@@ -122,7 +122,7 @@ const FundRequests = () => {
             
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-oaia-blue">KES 18.2M</div>
+                <div className="text-2xl font-bold text-oaia-blue">GHS 18.2M</div>
                 <div className="text-sm text-gray-900 mt-1">Total Requested</div>
                 <div className="text-xs text-oaia-gray mt-1">This quarter</div>
               </CardContent>
@@ -174,7 +174,7 @@ const FundRequests = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="amount">Request Amount (KES)</Label>
+                      <Label htmlFor="amount">Request Amount (GHS)</Label>
                       <Input id="amount" type="number" placeholder="Enter amount" />
                     </div>
                     

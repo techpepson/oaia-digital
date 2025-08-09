@@ -29,7 +29,7 @@ const ApprovedInvoices = () => {
       id: 'INV-2024-002',
       contractor: 'BuildRight Ltd',
       amount: 750000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Hospital Construction',
       contract: 'CNT-2024-002',
       approvedDate: '2024-01-12',
@@ -41,7 +41,7 @@ const ApprovedInvoices = () => {
       id: 'INV-2024-003',
       contractor: 'MedSupply Co',
       amount: 280000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Medical Equipment',
       contract: 'CNT-2024-003',
       approvedDate: '2024-01-11',
@@ -53,7 +53,7 @@ const ApprovedInvoices = () => {
       id: 'INV-2024-005',
       contractor: 'CleanWater Solutions',
       amount: 420000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Water System Installation',
       contract: 'CNT-2024-005',
       approvedDate: '2024-01-10',
@@ -149,7 +149,7 @@ const ApprovedInvoices = () => {
             
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-oaia-blue">KES 12.4M</div>
+                <div className="text-2xl font-bold text-oaia-blue">GHS 12.4M</div>
                 <div className="text-sm text-gray-900 mt-1">Total Value</div>
                 <div className="text-xs text-oaia-gray mt-1">Approved amount</div>
               </CardContent>

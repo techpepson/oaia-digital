@@ -33,13 +33,13 @@ const Notifications = () => {
       id: 1,
       type: 'invoice_submitted',
       title: 'New Invoice Submitted',
-      message: 'ABC Construction Ltd has submitted invoice INV-2024-011 for KES 450,000',
+      message: 'ABC Construction Ltd has submitted invoice INV-2024-011 for GHS 450,000',
       timestamp: '2 hours ago',
       read: false,
       priority: 'high',
       contractor: 'ABC Construction Ltd',
       invoiceId: 'INV-2024-011',
-      amount: 'KES 450,000'
+      amount: 'GHS 450,000'
     },
     {
       id: 2,
@@ -66,11 +66,11 @@ const Notifications = () => {
       id: 4,
       type: 'funding_received',
       title: 'Funding Allocation Received',
-      message: 'KES 5,000,000 funding allocation received from Ministry of Finance',
+      message: 'GHS 5,000,000 funding allocation received from Ministry of Finance',
       timestamp: '1 day ago',
       read: true,
       priority: 'low',
-      amount: 'KES 5,000,000'
+      amount: 'GHS 5,000,000'
     },
     {
       id: 5,

@@ -65,17 +65,17 @@ const Reports = () => {
   ];
 
   const spendingData = [
-    { period: 'January 2024', totalSpent: 'KES 2,450,000', invoiceCount: 12, contractors: 5, avgProcessingTime: '3.2 days' },
-    { period: 'December 2023', totalSpent: 'KES 3,120,000', invoiceCount: 18, contractors: 7, avgProcessingTime: '2.8 days' },
-    { period: 'November 2023', totalSpent: 'KES 1,890,000', invoiceCount: 9, contractors: 4, avgProcessingTime: '4.1 days' },
-    { period: 'October 2023', totalSpent: 'KES 2,780,000', invoiceCount: 15, contractors: 6, avgProcessingTime: '3.5 days' }
+    { period: 'January 2024', totalSpent: 'GHS 2,450,000', invoiceCount: 12, contractors: 5, avgProcessingTime: '3.2 days' },
+    { period: 'December 2023', totalSpent: 'GHS 3,120,000', invoiceCount: 18, contractors: 7, avgProcessingTime: '2.8 days' },
+    { period: 'November 2023', totalSpent: 'GHS 1,890,000', invoiceCount: 9, contractors: 4, avgProcessingTime: '4.1 days' },
+    { period: 'October 2023', totalSpent: 'GHS 2,780,000', invoiceCount: 15, contractors: 6, avgProcessingTime: '3.5 days' }
   ];
 
   const payablesData = [
-    { contractor: 'ABC Construction Ltd', invoiceId: 'INV-2024-001', amount: 'KES 450,000', daysOutstanding: 2, status: 'pending' },
-    { contractor: 'Tech Solutions Inc', invoiceId: 'INV-2024-003', amount: 'KES 280,000', daysOutstanding: 5, status: 'approved' },
-    { contractor: 'Green Energy Co', invoiceId: 'INV-2024-007', amount: 'KES 320,000', daysOutstanding: 8, status: 'pending' },
-    { contractor: 'ABC Construction Ltd', invoiceId: 'INV-2024-002', amount: 'KES 180,000', daysOutstanding: 12, status: 'rejected' }
+    { contractor: 'ABC Construction Ltd', invoiceId: 'INV-2024-001', amount: 'GHS 450,000', daysOutstanding: 2, status: 'pending' },
+    { contractor: 'Tech Solutions Inc', invoiceId: 'INV-2024-003', amount: 'GHS 280,000', daysOutstanding: 5, status: 'approved' },
+    { contractor: 'Green Energy Co', invoiceId: 'INV-2024-007', amount: 'GHS 320,000', daysOutstanding: 8, status: 'pending' },
+    { contractor: 'ABC Construction Ltd', invoiceId: 'INV-2024-002', amount: 'GHS 180,000', daysOutstanding: 12, status: 'rejected' }
   ];
 
   const getStatusColor = (status: string) => {

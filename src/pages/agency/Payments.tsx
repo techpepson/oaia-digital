@@ -32,7 +32,7 @@ const Payments = () => {
       invoiceId: 'INV-2024-002',
       contractor: 'BuildRight Ltd',
       amount: 750000,
-      currency: 'KES',
+      currency: 'GHS',
       paymentDate: '2024-01-15',
       status: 'completed',
       method: 'bank_transfer',
@@ -44,7 +44,7 @@ const Payments = () => {
       invoiceId: 'INV-2024-005',
       contractor: 'CleanWater Solutions',
       amount: 210000,
-      currency: 'KES',
+      currency: 'GHS',
       paymentDate: '2024-01-14',
       status: 'processing',
       method: 'bank_transfer',
@@ -56,7 +56,7 @@ const Payments = () => {
       invoiceId: null,
       contractor: 'Ministry of Finance',
       amount: 5000000,
-      currency: 'KES',
+      currency: 'GHS',
       paymentDate: '2024-01-13',
       status: 'completed',
       method: 'treasury_transfer',
@@ -121,7 +121,7 @@ const Payments = () => {
           <div className="grid md:grid-cols-4 gap-6 mb-6">
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-oaia-green">KES 12.4M</div>
+                <div className="text-2xl font-bold text-oaia-green">GHS 12.4M</div>
                 <div className="text-sm text-gray-900 mt-1">Total Disbursed</div>
                 <div className="text-xs text-oaia-gray mt-1">This month</div>
               </CardContent>
@@ -129,7 +129,7 @@ const Payments = () => {
             
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-oaia-blue">KES 2.1M</div>
+                <div className="text-2xl font-bold text-oaia-blue">GHS 2.1M</div>
                 <div className="text-sm text-gray-900 mt-1">Advances Paid</div>
                 <div className="text-xs text-oaia-gray mt-1">Pending recovery</div>
               </CardContent>

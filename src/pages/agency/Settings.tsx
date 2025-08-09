@@ -82,22 +82,22 @@ const Settings = () => {
     {
       id: 1,
       name: "Standard Invoice Approval",
-      description: "Default workflow for invoice amounts under KES 500,000",
+      description: "Default workflow for invoice amounts under GHS 500,000",
       steps: ["Finance Officer Review", "Department Head Approval"],
       status: "active",
-      invoiceThreshold: "KES 500,000",
+      invoiceThreshold: "GHS 500,000",
     },
     {
       id: 2,
       name: "High-Value Invoice Approval",
-      description: "Enhanced workflow for invoices above KES 500,000",
+      description: "Enhanced workflow for invoices above GHS 500,000",
       steps: [
         "Finance Officer Review",
         "Department Head Approval",
         "Director Sign-off",
       ],
       status: "active",
-      invoiceThreshold: "Above KES 500,000",
+      invoiceThreshold: "Above GHS 500,000",
     },
     {
       id: 3,
@@ -420,13 +420,13 @@ const Settings = () => {
                     <Label htmlFor="annual-budget">
                       Annual Budget Allocation
                     </Label>
-                    <Input id="annual-budget" defaultValue="KES 25,000,000" />
+                    <Input id="annual-budget" defaultValue="GHS 25,000,000" />
                   </div>
                   <div>
                     <Label htmlFor="monthly-limit">
                       Monthly Spending Limit
                     </Label>
-                    <Input id="monthly-limit" defaultValue="KES 3,000,000" />
+                    <Input id="monthly-limit" defaultValue="GHS 3,000,000" />
                   </div>
                   <div>
                     <Label htmlFor="single-invoice-limit">
@@ -434,14 +434,14 @@ const Settings = () => {
                     </Label>
                     <Input
                       id="single-invoice-limit"
-                      defaultValue="KES 1,000,000"
+                      defaultValue="GHS 1,000,000"
                     />
                   </div>
                   <div>
                     <Label htmlFor="approval-threshold">
                       Auto-Approval Threshold
                     </Label>
-                    <Input id="approval-threshold" defaultValue="KES 100,000" />
+                    <Input id="approval-threshold" defaultValue="GHS 100,000" />
                   </div>
                   <div>
                     <Label htmlFor="budget-alert">

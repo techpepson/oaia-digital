@@ -142,14 +142,7 @@ const InvoiceList = () => {
                 <Logo showText={false} />
               </Link>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-oaia-gray">
-                Welcome back, John Doe
-              </span>
-              <Button variant="outline" size="sm">
-                Logout
-              </Button>
-            </div>
+            
           </div>
         </header>
 

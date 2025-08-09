@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Clock,
@@ -13,6 +13,7 @@ import {
   Settings,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ interface AgencySidebarProps {
 
 const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/agency" },
@@ -50,10 +52,14 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
     { icon: Settings, label: "Settings", path: "/agency/settings" },
   ];
 
+  const handleLogout = () => {
+    navigate('/');
+  };
+
   return (
     <div
       className={cn(
-        "bg-white border-r border-gray-200 transition-all duration-300 flex flex-col",
+        "bg-white border-r border-gray-200 transition-all duration-300 flex flex-col h-full",
         isCollapsed ? "w-16" : "w-64"
       )}
     >
@@ -109,6 +115,21 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
           })}
         </ul>
       </nav>
+
+      {/* Logout Button */}
+      <div className="p-4 border-t border-gray-200 mt-auto">
+        <button
+          onClick={handleLogout}
+          className={cn(
+            "w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+            "text-oaia-gray hover:bg-oaia-light hover:text-oaia-blue",
+            isCollapsed ? "justify-center" : "justify-start"
+          )}
+        >
+          <LogOut className={cn("h-5 w-5", isCollapsed ? "" : "mr-3")} />
+          {!isCollapsed && <span>Logout</span>}
+        </button>
+      </div>
     </div>
   );
 };

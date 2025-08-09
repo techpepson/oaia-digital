@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { 
   LayoutDashboard, 
@@ -10,7 +10,8 @@ import {
   FileBarChart, 
   Settings,
   Building2,
-  Banknote
+  Banknote,
+  LogOut
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -45,6 +46,7 @@ interface ContractorSidebarProps {
 
 const ContractorSidebar: React.FC<ContractorSidebarProps> = ({ isCollapsed = false }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [expandedItems, setExpandedItems] = React.useState<Record<string, boolean>>({});
 
   const toggleExpand = (href: string) => {
@@ -54,9 +56,13 @@ const ContractorSidebar: React.FC<ContractorSidebarProps> = ({ isCollapsed = fal
     }));
   };
 
+  const handleLogout = () => {
+    navigate('/');
+  };
+
   return (
     <div className={cn(
-      "bg-white border-r border-gray-200 transition-all duration-300 flex flex-col",
+      "bg-white border-r border-gray-200 transition-all duration-300 flex flex-col h-full",
       isCollapsed ? "w-16" : "w-64"
     )}>
       <div className="p-4">
@@ -156,6 +162,20 @@ const ContractorSidebar: React.FC<ContractorSidebarProps> = ({ isCollapsed = fal
           })}
         </ul>
       </nav>
+
+      {/* Logout Button */}
+      <div className="p-4 border-t border-gray-200">
+        <button
+          onClick={handleLogout}
+          className={cn(
+            "w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors",
+            isCollapsed ? "justify-center" : "justify-start"
+          )}
+        >
+          <LogOut className={cn("h-5 w-5 flex-shrink-0", isCollapsed ? "mx-auto" : "mr-3")} />
+          {!isCollapsed && <span>Logout</span>}
+        </button>
+      </div>
     </div>
   );
 };

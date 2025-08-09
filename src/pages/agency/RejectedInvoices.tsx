@@ -29,7 +29,7 @@ const RejectedInvoices = () => {
       id: 'INV-2024-006',
       contractor: 'FastBuild Corp',
       amount: 890000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Road Construction',
       contract: 'CNT-2024-006',
       rejectedDate: '2024-01-14',
@@ -42,7 +42,7 @@ const RejectedInvoices = () => {
       id: 'INV-2024-008',
       contractor: 'QuickFix Ltd',
       amount: 150000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Maintenance Services',
       contract: 'CNT-2024-008',
       rejectedDate: '2024-01-13',
@@ -55,7 +55,7 @@ const RejectedInvoices = () => {
       id: 'INV-2024-009',
       contractor: 'PowerTech Solutions',
       amount: 320000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Electrical Installation',
       contract: 'CNT-2024-009',
       rejectedDate: '2024-01-12',
@@ -166,7 +166,7 @@ const RejectedInvoices = () => {
             
             <Card>
               <CardContent className="p-4">
-                <div className="text-2xl font-bold text-oaia-blue">KES 4.2M</div>
+                <div className="text-2xl font-bold text-oaia-blue">GHS 4.2M</div>
                 <div className="text-sm text-gray-900 mt-1">Rejected Value</div>
                 <div className="text-xs text-oaia-gray mt-1">Total amount</div>
               </CardContent>

@@ -35,47 +35,47 @@ const Contracts = () => {
       id: 'CON-2024-001',
       title: 'Hospital Construction Phase 2',
       contractor: 'ABC Construction Ltd',
-      value: 'KES 15,000,000',
+      value: 'GHS 15,000,000',
       startDate: '2024-01-15',
       endDate: '2024-12-15',
       status: 'active',
       progress: 68,
       milestones: [
-        { id: 1, title: 'Foundation Work', amount: 'KES 3,000,000', status: 'completed', dueDate: '2024-03-15' },
-        { id: 2, title: 'Structural Framework', amount: 'KES 5,000,000', status: 'completed', dueDate: '2024-06-15' },
-        { id: 3, title: 'Roofing & Walls', amount: 'KES 4,000,000', status: 'in-progress', dueDate: '2024-09-15' },
-        { id: 4, title: 'Interior Finishing', amount: 'KES 3,000,000', status: 'pending', dueDate: '2024-12-15' }
+        { id: 1, title: 'Foundation Work', amount: 'GHS 3,000,000', status: 'completed', dueDate: '2024-03-15' },
+        { id: 2, title: 'Structural Framework', amount: 'GHS 5,000,000', status: 'completed', dueDate: '2024-06-15' },
+        { id: 3, title: 'Roofing & Walls', amount: 'GHS 4,000,000', status: 'in-progress', dueDate: '2024-09-15' },
+        { id: 4, title: 'Interior Finishing', amount: 'GHS 3,000,000', status: 'pending', dueDate: '2024-12-15' }
       ]
     },
     {
       id: 'CON-2024-002',
       title: 'Road Maintenance Project',
       contractor: 'Tech Solutions Inc',
-      value: 'KES 8,500,000',
+      value: 'GHS 8,500,000',
       startDate: '2024-02-01',
       endDate: '2024-08-01',
       status: 'completed',
       progress: 100,
       milestones: [
-        { id: 1, title: 'Initial Assessment', amount: 'KES 1,000,000', status: 'completed', dueDate: '2024-03-01' },
-        { id: 2, title: 'Road Repairs', amount: 'KES 5,500,000', status: 'completed', dueDate: '2024-06-01' },
-        { id: 3, title: 'Final Inspection', amount: 'KES 2,000,000', status: 'completed', dueDate: '2024-08-01' }
+        { id: 1, title: 'Initial Assessment', amount: 'GHS 1,000,000', status: 'completed', dueDate: '2024-03-01' },
+        { id: 2, title: 'Road Repairs', amount: 'GHS 5,500,000', status: 'completed', dueDate: '2024-06-01' },
+        { id: 3, title: 'Final Inspection', amount: 'GHS 2,000,000', status: 'completed', dueDate: '2024-08-01' }
       ]
     },
     {
       id: 'CON-2024-003',
       title: 'Solar Installation Project',
       contractor: 'Green Energy Co',
-      value: 'KES 12,000,000',
+      value: 'GHS 12,000,000',
       startDate: '2024-03-01',
       endDate: '2025-02-28',
       status: 'active',
       progress: 35,
       milestones: [
-        { id: 1, title: 'Site Preparation', amount: 'KES 2,000,000', status: 'completed', dueDate: '2024-04-01' },
-        { id: 2, title: 'Equipment Procurement', amount: 'KES 6,000,000', status: 'in-progress', dueDate: '2024-08-01' },
-        { id: 3, title: 'Installation', amount: 'KES 3,000,000', status: 'pending', dueDate: '2024-12-01' },
-        { id: 4, title: 'Testing & Commissioning', amount: 'KES 1,000,000', status: 'pending', dueDate: '2025-02-28' }
+        { id: 1, title: 'Site Preparation', amount: 'GHS 2,000,000', status: 'completed', dueDate: '2024-04-01' },
+        { id: 2, title: 'Equipment Procurement', amount: 'GHS 6,000,000', status: 'in-progress', dueDate: '2024-08-01' },
+        { id: 3, title: 'Installation', amount: 'GHS 3,000,000', status: 'pending', dueDate: '2024-12-01' },
+        { id: 4, title: 'Testing & Commissioning', amount: 'GHS 1,000,000', status: 'pending', dueDate: '2025-02-28' }
       ]
     }
   ];

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -33,7 +32,7 @@ const PendingInvoices = () => {
       id: 'INV-2024-001',
       contractor: 'ABC Construction Ltd',
       amount: 450000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Road Maintenance',
       contract: 'CNT-2024-001',
       submittedDate: '2024-01-15',
@@ -46,7 +45,7 @@ const PendingInvoices = () => {
       id: 'INV-2024-004',
       contractor: 'Tech Solutions Inc',
       amount: 180000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'IT Services',
       contract: 'CNT-2024-004',
       submittedDate: '2024-01-14',
@@ -59,7 +58,7 @@ const PendingInvoices = () => {
       id: 'INV-2024-007',
       contractor: 'Green Energy Co',
       amount: 320000,
-      currency: 'KES',
+      currency: 'GHS',
       service: 'Solar Installation',
       contract: 'CNT-2024-007',
       submittedDate: '2024-01-13',
