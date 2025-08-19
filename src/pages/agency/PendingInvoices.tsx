@@ -18,7 +18,9 @@ import {
   Eye, 
   Download,
   AlertTriangle,
-  Calendar
+  Calendar,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const PendingInvoices = () => {
@@ -26,6 +28,7 @@ const PendingInvoices = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [contractorFilter, setContractorFilter] = useState('all');
+  const [viewedInvoices, setViewedInvoices] = useState<Set<string>>(new Set());
 
   const pendingInvoices = [
     {
@@ -86,14 +89,38 @@ const PendingInvoices = () => {
     }
   };
 
+  const handleView = (invoiceId: string) => {
+    setViewedInvoices(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(invoiceId)) {
+        newSet.delete(invoiceId);
+      } else {
+        newSet.add(invoiceId);
+      }
+      return newSet;
+    });
+  };
+
   const handleApprove = (invoiceId: string) => {
     console.log(`Approving invoice ${invoiceId}`);
     // Handle approval logic
+    // Close the view after approval
+    setViewedInvoices(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(invoiceId);
+      return newSet;
+    });
   };
 
   const handleReject = (invoiceId: string) => {
     console.log(`Rejecting invoice ${invoiceId}`);
     // Handle rejection logic
+    // Close the view after rejection
+    setViewedInvoices(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(invoiceId);
+      return newSet;
+    });
   };
 
   return (
@@ -201,55 +228,101 @@ const PendingInvoices = () => {
                 </TableHeader>
                 <TableBody>
                   {pendingInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell className="font-medium">{invoice.id}</TableCell>
-                      <TableCell>{invoice.contractor}</TableCell>
-                      <TableCell>{invoice.service}</TableCell>
-                      <TableCell>
-                        {invoice.currency} {invoice.amount.toLocaleString()}
-                      </TableCell>
-                      <TableCell>{invoice.contract}</TableCell>
-                      <TableCell>
-                        <Badge className={getPriorityColor(invoice.priority)}>
-                          {invoice.priority.toUpperCase()}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(invoice.status)}>
-                          {invoice.status.replace('_', ' ').toUpperCase()}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center text-sm text-oaia-gray">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {invoice.dueDate}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-4 w-4 mr-1" />
-                            View
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            className="bg-oaia-green hover:bg-oaia-green/90"
-                            onClick={() => handleApprove(invoice.id)}
-                          >
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            Approve
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="destructive"
-                            onClick={() => handleReject(invoice.id)}
-                          >
-                            <XCircle className="h-4 w-4 mr-1" />
-                            Reject
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                    <React.Fragment key={invoice.id}>
+                      <TableRow>
+                        <TableCell className="font-medium">{invoice.id}</TableCell>
+                        <TableCell>{invoice.contractor}</TableCell>
+                        <TableCell>{invoice.service}</TableCell>
+                        <TableCell>
+                          {invoice.currency} {invoice.amount.toLocaleString()}
+                        </TableCell>
+                        <TableCell>{invoice.contract}</TableCell>
+                        <TableCell>
+                          <Badge className={getPriorityColor(invoice.priority)}>
+                            {invoice.priority.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(invoice.status)}>
+                            {invoice.status.replace('_', ' ').toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center text-sm text-oaia-gray">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {invoice.dueDate}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleView(invoice.id)}
+                              className="flex items-center"
+                            >
+                              {viewedInvoices.has(invoice.id) ? (
+                                <>
+                                  <ChevronUp className="h-4 w-4 mr-1" />
+                                  Hide
+                                </>
+                              ) : (
+                                <>
+                                  <Eye className="h-4 w-4 mr-1" />
+                                  View
+                                </>
+                              )}
+                            </Button>
+                            {viewedInvoices.has(invoice.id) && (
+                              <>
+                                <Button 
+                                  size="sm" 
+                                  className="bg-oaia-green hover:bg-oaia-green/90"
+                                  onClick={() => handleApprove(invoice.id)}
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Approve
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive"
+                                  onClick={() => handleReject(invoice.id)}
+                                >
+                                  <XCircle className="h-4 w-4 mr-1" />
+                                  Reject
+                                </Button>
+                              </>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      {viewedInvoices.has(invoice.id) && (
+                        <TableRow>
+                          <TableCell colSpan={9} className="bg-gray-50 p-4">
+                            <div className="space-y-4">
+                              <h4 className="font-semibold text-gray-900">Invoice Details</h4>
+                              <div className="grid md:grid-cols-2 gap-4">
+                                <div>
+                                  <p className="text-sm text-gray-600">Contractor: <span className="font-medium text-gray-900">{invoice.contractor}</span></p>
+                                  <p className="text-sm text-gray-600">Service: <span className="font-medium text-gray-900">{invoice.service}</span></p>
+                                  <p className="text-sm text-gray-600">Contract: <span className="font-medium text-gray-900">{invoice.contract}</span></p>
+                                  <p className="text-sm text-gray-600">Amount: <span className="font-medium text-gray-900">{invoice.currency} {invoice.amount.toLocaleString()}</span></p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-600">Submitted: <span className="font-medium text-gray-900">{invoice.submittedDate}</span></p>
+                                  <p className="text-sm text-gray-600">Due Date: <span className="font-medium text-gray-900">{invoice.dueDate}</span></p>
+                                  <p className="text-sm text-gray-600">Priority: <span className="font-medium text-gray-900">{invoice.priority.toUpperCase()}</span></p>
+                                  <p className="text-sm text-gray-600">Documents: <span className="font-medium text-gray-900">{invoice.documents} files</span></p>
+                                </div>
+                              </div>
+                              <div className="border-t pt-4">
+                                <p className="text-sm text-gray-600 mb-2">Review the invoice details above and use the Approve or Reject buttons to take action.</p>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   ))}
                 </TableBody>
               </Table>
