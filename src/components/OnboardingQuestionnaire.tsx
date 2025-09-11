@@ -23,6 +23,12 @@ const OnboardingQuestionnaire = ({ onComplete, onBack }: OnboardingQuestionnaire
     taxIdentificationNumber: '',
     vatRegistered: false,
     vatNumber: '',
+    // Bank Details
+    bankName: '',
+    accountNumber: '',
+    accountName: '',
+    branch: '',
+    sortCode: '',
   });
 
   const handleChange = (field: string, value: any) => {
@@ -35,8 +41,8 @@ const OnboardingQuestionnaire = ({ onComplete, onBack }: OnboardingQuestionnaire
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Basic validation
-    if (!formData.yearsInBusiness || !formData.numberOfEmployees || !formData.annualRevenue || !formData.primaryServices) {
-      toast.error('Please fill in all required fields');
+    if (!formData.yearsInBusiness || !formData.numberOfEmployees || !formData.annualRevenue || !formData.primaryServices || !formData.bankName || !formData.accountNumber || !formData.accountName) {
+      toast.error('Please fill in all required fields including bank details');
       return;
     }
     onComplete(formData);
@@ -159,6 +165,62 @@ const OnboardingQuestionnaire = ({ onComplete, onBack }: OnboardingQuestionnaire
                 rows={3}
               />
             )}
+          </div>
+
+          {/* Bank Details Section */}
+          <div className="md:col-span-2">
+            <h3 className="text-lg font-semibold text-oaia-blue mb-4">Bank Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="bankName">Bank Name *</Label>
+                <Input
+                  id="bankName"
+                  placeholder="Enter bank name"
+                  value={formData.bankName}
+                  onChange={(e) => handleChange('bankName', e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber">Account Number *</Label>
+                <Input
+                  id="accountNumber"
+                  placeholder="Enter account number"
+                  value={formData.accountNumber}
+                  onChange={(e) => handleChange('accountNumber', e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="accountName">Account Name *</Label>
+                <Input
+                  id="accountName"
+                  placeholder="Enter account name"
+                  value={formData.accountName}
+                  onChange={(e) => handleChange('accountName', e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="branch">Branch</Label>
+                <Input
+                  id="branch"
+                  placeholder="Enter branch name"
+                  value={formData.branch}
+                  onChange={(e) => handleChange('branch', e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="sortCode">Sort Code</Label>
+                <Input
+                  id="sortCode"
+                  placeholder="Enter sort code"
+                  value={formData.sortCode}
+                  onChange={(e) => handleChange('sortCode', e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2 md:col-span-2">

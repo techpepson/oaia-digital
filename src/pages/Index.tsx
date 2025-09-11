@@ -20,7 +20,7 @@ const Index = () => {
                   Contractor Login
                 </Button>
               </Link>
-              <Link to="/login?type=agency">
+              <Link to="/agency-selection">
                 <Button variant="ghost" className="text-oaia-blue hover:text-oaia-orange">
                   Agency Login
                 </Button>
@@ -103,7 +103,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.location.href = '/signup?type=agency'}>
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.location.href = '/agency-selection'}>
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-oaia-orange rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-xl">A</span>
@@ -115,7 +115,7 @@ const Index = () => {
                   Review and approve invoices, manage contracts and payments
                 </CardDescription>
                 <Button className="w-full bg-oaia-orange hover:bg-oaia-orange/90" asChild>
-                  <Link to="/signup?type=agency">Get Started</Link>
+                  <Link to="/agency-selection">Get Started</Link>
                 </Button>
               </CardContent>
             </Card>

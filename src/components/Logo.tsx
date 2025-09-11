@@ -8,24 +8,15 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ className = "", showText = true }) => {
   return (
-    <div className={`flex items-center space-x-3 ${className}`}>
-      {/* Logo Symbol */}
-      <div className="relative">
-        <div className="w-10 h-10 bg-gradient-to-br from-oaia-blue to-oaia-orange rounded-lg flex items-center justify-center shadow-lg">
-          <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-          </div>
-        </div>
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-oaia-orange rounded-full"></div>
+    <div className={`flex items-center ${className}`}>
+      {/* OA Advance Logo */}
+      <div className="h-10 flex items-center">
+        <img 
+          src="/Horizontal Logo Lockup  T4.png" 
+          alt="OA Advance" 
+          className="h-24 w-auto object-contain"
+        />
       </div>
-      
-      {/* Logo Text */}
-      {showText && (
-        <div className="flex flex-col leading-none">
-          <span className="text-2xl font-bold text-oaia-blue">OAIA</span>
-          <span className="text-xs text-oaia-gray">One Africa Invoice Advance</span>
-        </div>
-      )}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { FileText, Upload, CheckCircle, X, Clock } from 'lucide-react';
 import { toast } from 'sonner';
+import OnboardingQuestionnaire from './OnboardingQuestionnaire';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -17,10 +18,10 @@ interface OnboardingModalProps {
 const OnboardingModal = ({ isOpen, onClose, userType }: OnboardingModalProps) => {
   const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
+  const [questionnaireData, setQuestionnaireData] = useState(null);
 
   const requiredDocuments = userType === 'contractor' ? [
     'Certificate of Incorporation',
-    'Memorandum & Articles of Association', 
     'Shareholding Structure',
     'Company Profile',
     'Directors ID Documents & Proof of Address',
@@ -31,8 +32,7 @@ const OnboardingModal = ({ isOpen, onClose, userType }: OnboardingModalProps) =>
     'Bank Statements (Last 6 months)',
     'Audited Financial Statements',
     'Professional Indemnity Insurance',
-    'Public Liability Insurance',
-    'Regulatory License (if applicable)'
+    'Public Liability Insurance'
   ] : [
     'Government Agency Registration',
     'Authority Letter',
@@ -41,48 +41,61 @@ const OnboardingModal = ({ isOpen, onClose, userType }: OnboardingModalProps) =>
     'Budget Allocation Documents'
   ];
 
+  const optionalDocuments = userType === 'contractor' ? [
+    'Memorandum & Articles of Association',
+    'Regulatory License (if applicable)',
+    'Public Procurement Authority Certificate'
+  ] : [];
+
   const handleDocumentUpload = (docName: string) => {
-    if (!uploadedDocs.includes(docName)) {
-      setUploadedDocs([...uploadedDocs, docName]);
-      toast.success(`${docName} uploaded successfully`);
-    }
+    setUploadedDocs(prev => [...prev, docName]);
+    toast.success(`${docName} uploaded successfully`);
   };
 
   const removeDocument = (docName: string) => {
-    setUploadedDocs(uploadedDocs.filter(doc => doc !== docName));
-    toast.info(`${docName} removed`);
+    setUploadedDocs(prev => prev.filter(doc => doc !== docName));
+  };
+
+  const handleQuestionnaireComplete = (data: any) => {
+    setQuestionnaireData(data);
+    setCurrentStep(2);
   };
 
   const handleSubmitDocuments = () => {
-    if (uploadedDocs.length < Math.min(8, requiredDocuments.length)) {
-      toast.error(`Please upload at least ${Math.min(8, requiredDocuments.length)} required documents`);
+    const requiredUploaded = uploadedDocs.filter(doc => requiredDocuments.includes(doc));
+    if (requiredUploaded.length < requiredDocuments.length) {
+      toast.error('Please upload all required documents');
       return;
     }
-    
-    setCurrentStep(2);
-    toast.success('Documents submitted successfully!');
+    setCurrentStep(3);
   };
 
   const handleCompleteOnboarding = () => {
-    toast.success('Onboarding completed! You can now access all features.');
+    toast.success('Onboarding completed successfully!');
     onClose();
   };
 
   const uploadProgress = (uploadedDocs.length / requiredDocuments.length) * 100;
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl text-oaia-blue">
             Complete Your Onboarding
           </DialogTitle>
           <DialogDescription>
-            Upload the required compliance documents to activate your account
+            {currentStep === 1 ? 'Please complete the questionnaire to get started' : 
+             currentStep === 2 ? 'Upload the required compliance documents to activate your account' :
+             'Review and complete your onboarding'}
           </DialogDescription>
         </DialogHeader>
 
         {currentStep === 1 ? (
+          <OnboardingQuestionnaire 
+            onComplete={handleQuestionnaireComplete}
+          />
+        ) : currentStep === 2 ? (
           <div className="space-y-6">
             {/* Progress */}
             <div className="space-y-2">
@@ -103,7 +116,7 @@ const OnboardingModal = ({ isOpen, onClose, userType }: OnboardingModalProps) =>
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-blue-800 space-y-2">
-                  <p><strong>Important:</strong> All documents must be uploaded to proceed.</p>
+                  <p><strong>Important:</strong> Required documents must be uploaded to proceed. Optional documents can be uploaded later.</p>
                   <p><strong>Processing Time:</strong> Onboarding will be completed within 24-48 hours.</p>
                   <p><strong>Document Requirements:</strong></p>
                   <ul className="list-disc list-inside ml-4 space-y-1">
@@ -117,63 +130,118 @@ const OnboardingModal = ({ isOpen, onClose, userType }: OnboardingModalProps) =>
               </CardContent>
             </Card>
 
-            {/* Document Upload Grid */}
-            <div className="grid gap-3 max-h-96 overflow-y-auto">
-              {requiredDocuments.map((docName, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-5 w-5 text-oaia-blue flex-shrink-0" />
-                    <div className="min-w-0">
-                      <div className="font-medium text-gray-900 text-sm">{docName}</div>
-                      <div className="text-xs text-oaia-gray">
-                        {docName.includes('ID') || docName.includes('Address') ? 'Certified copies required' :
-                         docName.includes('Financial') || docName.includes('Bank') ? 'Recent statements (< 6 months)' :
-                         docName.includes('Insurance') ? 'Valid policy documents' :
-                         'Official company documents'}
+            {/* Required Documents */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-900">Required Documents</h3>
+              <div className="grid gap-3 max-h-64 overflow-y-auto">
+                {requiredDocuments.map((docName, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                    <div className="flex items-center space-x-3">
+                      <FileText className="h-5 w-5 text-oaia-blue flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="font-medium text-gray-900 text-sm">{docName}</div>
+                        <div className="text-xs text-oaia-gray">
+                          {docName.includes('ID') || docName.includes('Address') ? 'Certified copies required' :
+                           docName.includes('Financial') || docName.includes('Bank') ? 'Recent statements (< 6 months)' :
+                           docName.includes('Insurance') ? 'Valid policy documents' :
+                           'Official company documents'}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 flex-shrink-0">
-                    {uploadedDocs.includes(docName) ? (
-                      <>
-                        <Badge className="bg-green-100 text-green-800 text-xs">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Uploaded
-                        </Badge>
+                    
+                    <div className="flex items-center space-x-2 flex-shrink-0">
+                      {uploadedDocs.includes(docName) ? (
+                        <>
+                          <Badge className="bg-green-100 text-green-800 text-xs">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Uploaded
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeDocument(docName)}
+                            className="text-red-600 hover:text-red-700 h-8 w-8 p-0"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      ) : (
                         <Button
                           size="sm"
-                          variant="ghost"
-                          onClick={() => removeDocument(docName)}
-                          className="text-red-600 hover:text-red-700 h-8 w-8 p-0"
+                          variant="outline"
+                          onClick={() => handleDocumentUpload(docName)}
+                          className="border-oaia-blue text-oaia-blue hover:bg-oaia-blue hover:text-white text-xs"
                         >
-                          <X className="h-4 w-4" />
+                          <Upload className="h-3 w-3 mr-1" />
+                          Upload
                         </Button>
-                      </>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDocumentUpload(docName)}
-                        className="border-oaia-blue text-oaia-blue hover:bg-oaia-blue hover:text-white text-xs"
-                      >
-                        <Upload className="h-3 w-3 mr-1" />
-                        Upload
-                      </Button>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+
+            {/* Optional Documents */}
+            {optionalDocuments.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-900">Optional Documents</h3>
+                <p className="text-sm text-gray-600">These documents can be uploaded now or later through your profile.</p>
+                <div className="grid gap-3 max-h-64 overflow-y-auto">
+                  {optionalDocuments.map((docName, index) => (
+                    <div key={`optional-${index}`} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 border-dashed">
+                      <div className="flex items-center space-x-3">
+                        <FileText className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <div className="font-medium text-gray-700 text-sm">{docName}</div>
+                          <div className="text-xs text-gray-500">
+                            Optional - Can be uploaded later
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 flex-shrink-0">
+                        {uploadedDocs.includes(docName) ? (
+                          <>
+                            <Badge className="bg-green-100 text-green-800 text-xs">
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                              Uploaded
+                            </Badge>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => removeDocument(docName)}
+                              className="text-red-600 hover:text-red-700 h-8 w-8 p-0"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDocumentUpload(docName)}
+                            className="border-gray-300 text-gray-600 hover:bg-gray-100 text-xs"
+                          >
+                            <Upload className="h-3 w-3 mr-1" />
+                            Upload
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <div className="flex justify-end space-x-4 pt-6 border-t">
               <Button
                 onClick={handleSubmitDocuments}
                 className="bg-oaia-blue hover:bg-oaia-blue/90"
-                disabled={uploadedDocs.length < Math.min(8, requiredDocuments.length)}
+                disabled={uploadedDocs.filter(doc => requiredDocuments.includes(doc)).length < requiredDocuments.length}
               >
-                Submit Documents ({uploadedDocs.length})
+                Submit Documents ({uploadedDocs.filter(doc => requiredDocuments.includes(doc)).length}/{requiredDocuments.length} required)
               </Button>
             </div>
           </div>

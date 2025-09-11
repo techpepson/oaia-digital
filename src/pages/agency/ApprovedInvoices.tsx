@@ -16,13 +16,18 @@ import {
   Eye, 
   Download,
   Calendar,
-  FileText
+  FileText,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 const ApprovedInvoices = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [sortField, setSortField] = useState('');
+  const [sortDirection, setSortDirection] = useState('asc');
 
   const approvedInvoices = [
     {
@@ -70,6 +75,20 @@ const ApprovedInvoices = () => {
       case 'pending_payment': return 'bg-yellow-100 text-yellow-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
+    return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
   };
 
   return (
@@ -179,14 +198,46 @@ const ApprovedInvoices = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Invoice ID</TableHead>
-                    <TableHead>Contractor</TableHead>
-                    <TableHead>Service</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Approved Date</TableHead>
-                    <TableHead>Approved By</TableHead>
-                    <TableHead>Payment Status</TableHead>
-                    <TableHead>Payment Date</TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('id')} className="p-0 h-auto font-medium">
+                        Invoice ID {getSortIcon('id')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('contractor')} className="p-0 h-auto font-medium">
+                        Contractor {getSortIcon('contractor')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('service')} className="p-0 h-auto font-medium">
+                        Service {getSortIcon('service')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('amount')} className="p-0 h-auto font-medium">
+                        Amount {getSortIcon('amount')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('approvedDate')} className="p-0 h-auto font-medium">
+                        Approved Date {getSortIcon('approvedDate')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('approvedBy')} className="p-0 h-auto font-medium">
+                        Approved By {getSortIcon('approvedBy')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('paymentStatus')} className="p-0 h-auto font-medium">
+                        Payment Status {getSortIcon('paymentStatus')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('paymentDate')} className="p-0 h-auto font-medium">
+                        Payment Date {getSortIcon('paymentDate')}
+                      </Button>
+                    </TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>

@@ -38,7 +38,7 @@ const ReportsExports = () => {
     {
       id: 2,
       name: 'Cash Flow Analysis',
-      description: 'Analysis of payments received and outstanding amounts',
+      description: 'Analysis of advance payments received and outstanding amounts',
       type: 'financial',
       icon: TrendingUp,
       lastGenerated: '2024-01-14',

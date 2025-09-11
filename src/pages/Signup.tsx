@@ -15,6 +15,38 @@ const Signup = () => {
   const userType = searchParams.get('type') || 'contractor';
   const [currentStep, setCurrentStep] = useState(1);
   
+  // Only contractors can sign up - redirect others to login
+  if (userType !== 'contractor') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-oaia-light via-white to-oaia-light flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <Link to="/" className="inline-block">
+              <Logo />
+            </Link>
+            <h1 className="mt-6 text-3xl font-bold text-gray-900">Access Restricted</h1>
+            <p className="mt-2 text-oaia-gray">Sign-up is only available for contractors.</p>
+          </div>
+          <Card className="shadow-xl border-0">
+            <CardContent className="pt-6">
+              <div className="text-center space-y-4">
+                <p className="text-sm text-gray-600">
+                  If you are a government agency, Ministry of Finance, or Auditor General representative, 
+                  please contact your system administrator for account access.
+                </p>
+                <Link to={`/login?type=${userType}`}>
+                  <Button className="w-full bg-oaia-blue hover:bg-oaia-blue/90">
+                    Go to Login
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+  
   const [formData, setFormData] = useState({
     // Step 1: Basic Info
     organizationName: '',

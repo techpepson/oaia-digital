@@ -37,9 +37,11 @@ import AuditReports from "./pages/auditor/AuditReports";
 import AuditorNotifications from "./pages/auditor/AuditorNotifications";
 import OaiaAdminDashboard from "./pages/dashboards/OaiaAdminDashboard";
 import MinistryNotifications from "./pages/ministry/Notifications";
-import MinistryAnalytics from "./pages/ministry/Analytics";
 import MinistrySettings from "./pages/ministry/Settings";
 import AuditorSettings from "./pages/auditor/Settings";
+import AgencySelection from "./pages/AgencySelection";
+import OaDashboard from "./pages/dashboards/OaDashboard";
+import ReportsAnalytics from "./pages/ministry/ReportsAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -51,8 +53,21 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/agency-selection" element={<AgencySelection />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup" element={<Login />} />
+          {/* Custom URLs for different agency types */}
+          <Route path="/agency/getfund" element={<Login />} />
+          <Route path="/agency/nhis" element={<Login />} />
+          <Route path="/agency/roadfund" element={<Login />} />
+          <Route path="/agency/ministry-health" element={<Login />} />
+          <Route path="/agency/ministry-education" element={<Login />} />
+          <Route path="/agency/ministry-transport" element={<Login />} />
+          <Route path="/agency/ministry-works" element={<Login />} />
+          <Route path="/agency/ministry-water" element={<Login />} />
+          <Route path="/mof" element={<Login />} />
+          <Route path="/ag" element={<Login />} />
+          <Route path="/oa" element={<Login />} />
           <Route
             path="/dashboard/contractor"
             element={<ContractorDashboard />}
@@ -94,7 +109,7 @@ const App = () => (
           <Route path="/agency/settings" element={<Settings />} />
           <Route path="/ministry/agencies" element={<Agencies />} />
           <Route path="/ministry/funding" element={<FundingManagement />} />
-          <Route path="/ministry/reports" element={<BudgetReports />} />
+          <Route path="/ministry/reports" element={<ReportsAnalytics />} />
           <Route path="/auditor/cases" element={<AuditCases />} />
           <Route path="/auditor/registry" element={<InvoiceRegistry />} />
           <Route path="/auditor/analytics" element={<AnalyticsTools />} />
@@ -107,7 +122,6 @@ const App = () => (
             path="/ministry/notifications"
             element={<MinistryNotifications />}
           />
-          <Route path="/ministry/analytics" element={<MinistryAnalytics />} />
           <Route path="/ministry/settings" element={<MinistrySettings />} />
           <Route path="/auditor/settings" element={<AuditorSettings />} />
           <Route path="*" element={<NotFound />} />

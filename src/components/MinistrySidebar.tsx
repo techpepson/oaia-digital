@@ -32,8 +32,7 @@ const MinistrySidebar = ({ isCollapsed, onToggle }: MinistrySidebarProps) => {
       label: "Funding Management",
       path: "/ministry/funding",
     },
-    { icon: FileText, label: "Budget Reports", path: "/ministry/reports" },
-    { icon: BarChart3, label: "Analytics", path: "/ministry/analytics" },
+    { icon: BarChart3, label: "Reports & Analytics", path: "/ministry/reports-analytics" },
     { icon: Bell, label: "Notifications", path: "/ministry/notifications" },
     { icon: Settings, label: "Settings", path: "/ministry/settings" },
   ];

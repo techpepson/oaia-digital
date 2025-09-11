@@ -47,7 +47,7 @@ const AgencySidebar = ({ isCollapsed, onToggle }: AgencySidebarProps) => {
     { icon: CreditCard, label: "Payments", path: "/agency/payments" },
     { icon: FileText, label: "Fund Requests", path: "/agency/fund-requests" },
     { icon: FolderOpen, label: "Contracts", path: "/agency/contracts" },
-    { icon: BarChart3, label: "Reports", path: "/agency/reports" },
+    { icon: BarChart3, label: "Reports & Analytics", path: "/agency/reports" },
     { icon: Bell, label: "Notifications", path: "/agency/notifications" },
     { icon: Settings, label: "Settings", path: "/agency/settings" },
   ];

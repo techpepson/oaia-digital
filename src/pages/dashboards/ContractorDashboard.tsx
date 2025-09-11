@@ -36,7 +36,7 @@ const ContractorDashboard = () => {
       color: "text-oaia-blue",
     },
     {
-      title: "Payments Received",
+      title: "Advance Payments Received",
       value: "GHS 245,000",
       change: "+8%",
       icon: DollarSign,

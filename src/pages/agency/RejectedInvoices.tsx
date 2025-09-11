@@ -16,13 +16,18 @@ import {
   Eye, 
   MessageSquare,
   Calendar,
-  AlertCircle
+  AlertCircle,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 const RejectedInvoices = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [reasonFilter, setReasonFilter] = useState('all');
+  const [sortField, setSortField] = useState('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const rejectedInvoices = [
     {
@@ -78,6 +83,20 @@ const RejectedInvoices = () => {
 
   const formatReason = (reason: string) => {
     return reason.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
+
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
+    return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
   };
 
   return (
@@ -188,14 +207,46 @@ const RejectedInvoices = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Invoice ID</TableHead>
-                    <TableHead>Contractor</TableHead>
-                    <TableHead>Service</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Rejected Date</TableHead>
-                    <TableHead>Rejected By</TableHead>
-                    <TableHead>Reason</TableHead>
-                    <TableHead>Can Resubmit</TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('id')} className="p-0 h-auto font-medium">
+                        Invoice ID {getSortIcon('id')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('contractor')} className="p-0 h-auto font-medium">
+                        Contractor {getSortIcon('contractor')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('service')} className="p-0 h-auto font-medium">
+                        Service {getSortIcon('service')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('amount')} className="p-0 h-auto font-medium">
+                        Amount {getSortIcon('amount')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('rejectedDate')} className="p-0 h-auto font-medium">
+                        Rejected Date {getSortIcon('rejectedDate')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('rejectedBy')} className="p-0 h-auto font-medium">
+                        Rejected By {getSortIcon('rejectedBy')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('reason')} className="p-0 h-auto font-medium">
+                        Reason {getSortIcon('reason')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort('canResubmit')} className="p-0 h-auto font-medium">
+                        Can Resubmit {getSortIcon('canResubmit')}
+                      </Button>
+                    </TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>

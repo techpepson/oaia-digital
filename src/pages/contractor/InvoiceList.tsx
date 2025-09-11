@@ -43,6 +43,7 @@ const InvoiceList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [agencyFilter, setAgencyFilter] = useState("all");
+  const [contractFilter, setContractFilter] = useState("all");
   const [dateRange, setDateRange] = useState("all");
 
   const invoices = [
@@ -52,7 +53,7 @@ const InvoiceList = () => {
       status: "pending",
       agency: "Ministry of Health",
       date: "2024-01-15",
-      project: "Medical Equipment Supply",
+      contract: "Medical Equipment Supply Contract",
       advance: "GHS 225,000",
     },
     {
@@ -61,7 +62,7 @@ const InvoiceList = () => {
       status: "approved",
       agency: "Ministry of Education",
       date: "2024-01-12",
-      project: "School Infrastructure",
+      contract: "School Infrastructure Development",
       advance: "GHS 140,000",
     },
     {
@@ -70,7 +71,7 @@ const InvoiceList = () => {
       status: "processing",
       agency: "County Government",
       date: "2024-01-10",
-      project: "Road Maintenance",
+      contract: "Road Maintenance Agreement",
       advance: "GHS 60,000",
     },
     {
@@ -79,7 +80,7 @@ const InvoiceList = () => {
       status: "paid",
       agency: "Ministry of Transport",
       date: "2024-01-08",
-      project: "Transport Services",
+      contract: "Transport Services Contract",
       advance: "GHS 175,000",
     },
     {
@@ -88,7 +89,7 @@ const InvoiceList = () => {
       status: "pending",
       agency: "Ministry of Health",
       date: "2024-01-05",
-      project: "Healthcare Supplies",
+      contract: "Healthcare Supplies Agreement",
       advance: "GHS 90,000",
     },
   ];
@@ -111,12 +112,14 @@ const InvoiceList = () => {
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch =
       invoice.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.project.toLowerCase().includes(searchTerm.toLowerCase());
+      invoice.contract.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || invoice.status === statusFilter;
     const matchesAgency =
       agencyFilter === "all" || invoice.agency === agencyFilter;
-    return matchesSearch && matchesStatus && matchesAgency;
+    const matchesContract =
+      contractFilter === "all" || invoice.contract === contractFilter;
+    return matchesSearch && matchesStatus && matchesAgency && matchesContract;
   });
 
   return (
@@ -219,12 +222,36 @@ const InvoiceList = () => {
                 <div className="flex items-center space-x-2">
                   <Search className="h-4 w-4 text-oaia-gray" />
                   <Input
-                    placeholder="Search invoices..."
+                    placeholder="Search by contract name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-64"
                   />
                 </div>
+
+                <Select value={contractFilter} onValueChange={setContractFilter}>
+                  <SelectTrigger className="w-56">
+                    <SelectValue placeholder="Filter by Contract" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Contracts</SelectItem>
+                    <SelectItem value="Medical Equipment Supply Contract">
+                      Medical Equipment Supply Contract
+                    </SelectItem>
+                    <SelectItem value="School Infrastructure Development">
+                      School Infrastructure Development
+                    </SelectItem>
+                    <SelectItem value="Road Maintenance Agreement">
+                      Road Maintenance Agreement
+                    </SelectItem>
+                    <SelectItem value="Transport Services Contract">
+                      Transport Services Contract
+                    </SelectItem>
+                    <SelectItem value="Healthcare Supplies Agreement">
+                      Healthcare Supplies Agreement
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-40">
@@ -281,7 +308,7 @@ const InvoiceList = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Invoice ID</TableHead>
-                    <TableHead>Project</TableHead>
+                    <TableHead>Contract</TableHead>
                     <TableHead>Agency</TableHead>
                     <TableHead>Invoice Amount</TableHead>
                     <TableHead>Advance Amount</TableHead>
@@ -296,7 +323,7 @@ const InvoiceList = () => {
                       <TableCell className="font-medium">
                         {invoice.id}
                       </TableCell>
-                      <TableCell>{invoice.project}</TableCell>
+                      <TableCell>{invoice.contract}</TableCell>
                       <TableCell>{invoice.agency}</TableCell>
                       <TableCell>{invoice.amount}</TableCell>
                       <TableCell>{invoice.advance}</TableCell>

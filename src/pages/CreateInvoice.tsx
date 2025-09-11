@@ -29,7 +29,7 @@ const CreateInvoice = () => {
   const [advancePercentage, setAdvancePercentage] = useState<number>(0);
   const [advanceAmount, setAdvanceAmount] = useState<number>(0);
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
-  const [selectedBankAccount, setSelectedBankAccount] = useState<string>("");
+  const [selectedBankAccounts, setSelectedBankAccounts] = useState<string[]>([]);
   const [isAddingBankAccount, setIsAddingBankAccount] = useState(false);
   const [newBankAccount, setNewBankAccount] = useState<Omit<BankAccount, 'id'>>({ 
     accountName: '',
@@ -40,15 +40,11 @@ const CreateInvoice = () => {
     isDefault: false
   });
 
-  // Invoice-specific required documents
+  // Invoice-specific required documents (only invoice-related docs)
   const requiredDocuments = [
     { name: "Invoice", description: "Detailed invoice document" },
     { name: "Award Contract", description: "Signed contract document" },
-    { name: "Interim Payment Certificate", description: "Approved payment certificate" },
-    { name: "Delivery Note", description: "Proof of goods/services delivery" },
-    { name: "Tax Clearance Certificate", description: "Current tax clearance" },
-    { name: "VAT Invoice", description: "If applicable" },
-    { name: "Inspection Report", description: "If applicable" },
+    { name: "Payment Certificate", description: "Approved payment certificate" },
   ];
 
   const [formData, setFormData] = useState({
@@ -261,8 +257,8 @@ const CreateInvoice = () => {
                             type="text"
                             value={formData.amount}
                             onChange={(e) => {
-                              // Only allow numbers and decimal points
-                              const value = e.target.value.replace(/[^0-9.]/g, '');
+                              // Remove existing commas and only allow numbers and decimal points
+                              const value = e.target.value.replace(/,/g, '').replace(/[^0-9.]/g, '');
                               // Format the amount with commas
                               const formattedValue = formatAmount(value);
                               setFormData({ ...formData, amount: formattedValue });
@@ -364,7 +360,10 @@ const CreateInvoice = () => {
                       {/* Bank Account Selection */}
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <h3 className="text-lg font-medium">Bank Account for Payment</h3>
+                          <div>
+                            <h3 className="text-lg font-medium">Bank Accounts for Payment</h3>
+                            <p className="text-sm text-gray-500 mt-1">Select one or more bank accounts to receive payments</p>
+                          </div>
                           <Button
                             variant="outline"
                             size="sm"
@@ -467,9 +466,15 @@ const CreateInvoice = () => {
                                   <div
                                     key={account.id}
                                     className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                                      selectedBankAccount === account.id ? 'border-oaia-blue bg-blue-50' : 'hover:bg-gray-50'
+                                      selectedBankAccounts.includes(account.id) ? 'border-oaia-blue bg-blue-50' : 'hover:bg-gray-50'
                                     }`}
-                                    onClick={() => setSelectedBankAccount(account.id)}
+                                    onClick={() => {
+                                      if (selectedBankAccounts.includes(account.id)) {
+                                        setSelectedBankAccounts(selectedBankAccounts.filter(id => id !== account.id));
+                                      } else {
+                                        setSelectedBankAccounts([...selectedBankAccounts, account.id]);
+                                      }
+                                    }}
                                   >
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center space-x-3">
@@ -488,7 +493,7 @@ const CreateInvoice = () => {
                                           Default
                                         </Badge>
                                       )}
-                                      {selectedBankAccount === account.id && (
+                                      {selectedBankAccounts.includes(account.id) && (
                                         <CheckCircle className="h-5 w-5 text-green-500" />
                                       )}
                                     </div>
@@ -581,14 +586,14 @@ const CreateInvoice = () => {
                       ) : (
                         <Button
                           onClick={() => {
-                            if (!selectedBankAccount) {
-                              toast.error("Please select a bank account");
+                            if (selectedBankAccounts.length === 0) {
+                              toast.error("Please select at least one bank account");
                               return;
                             }
                             toast.success("Invoice submitted successfully!");
                             setIsSubmitted(true);
                           }}
-                          disabled={!selectedBankAccount}
+                          disabled={selectedBankAccounts.length === 0}
                         >
                           Submit Invoice
                         </Button>

@@ -20,7 +20,10 @@ import {
   Search,
   Eye,
   Plus,
-  Clock
+  Clock,
+  PieChart,
+  Activity,
+  Target
 } from 'lucide-react';
 
 const Reports = () => {
@@ -28,6 +31,42 @@ const Reports = () => {
   const [reportType, setReportType] = useState('spending');
   const [dateFilter, setDateFilter] = useState('this-month');
   const [contractorFilter, setContractorFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState('reports');
+
+  const analyticsData = [
+    {
+      icon: DollarSign,
+      title: "Total Budget Used",
+      value: "68%",
+      description: "GHS 12.4M of 18.2M",
+      color: "text-oaia-blue",
+      bgColor: "bg-blue-50"
+    },
+    {
+      icon: Activity,
+      title: "Invoice Processing",
+      value: "3.2 days",
+      description: "Average processing time",
+      color: "text-green-600",
+      bgColor: "bg-green-50"
+    },
+    {
+      icon: Target,
+      title: "Compliance Rate",
+      value: "94%",
+      description: "Above target threshold",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50"
+    },
+    {
+      icon: TrendingUp,
+      title: "Monthly Growth",
+      value: "+12%",
+      description: "Compared to last month",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50"
+    }
+  ];
 
   const reportTemplates = [
     {
@@ -110,10 +149,30 @@ const Reports = () => {
               </Link>
               <div>
                 <h1 className="text-xl font-semibold text-gray-900">Reports & Analytics</h1>
-                <p className="text-sm text-oaia-gray">Generate comprehensive reports and export data</p>
+                <p className="text-sm text-oaia-gray">Generate comprehensive reports, analytics and export data</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <Button
+                  variant={activeTab === 'reports' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setActiveTab('reports')}
+                  className={activeTab === 'reports' ? 'bg-white shadow-sm' : ''}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Reports
+                </Button>
+                <Button
+                  variant={activeTab === 'analytics' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setActiveTab('analytics')}
+                  className={activeTab === 'analytics' ? 'bg-white shadow-sm' : ''}
+                >
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Analytics
+                </Button>
+              </div>
               <Button className="bg-oaia-blue hover:bg-oaia-blue/90">
                 <Plus className="h-4 w-4 mr-2" />
                 Custom Report
@@ -126,6 +185,9 @@ const Reports = () => {
         </header>
 
         <div className="flex-1 p-6">
+          {/* Reports Tab */}
+          {activeTab === 'reports' && (
+            <>
           {/* Report Templates */}
           <Card className="mb-6">
             <CardHeader>
@@ -302,6 +364,103 @@ const Reports = () => {
                 </Table>
               </CardContent>
             </Card>
+          )}
+            </>
+          )}
+
+          {/* Analytics Tab */}
+          {activeTab === 'analytics' && (
+            <>
+              {/* Analytics Overview */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                {analyticsData.map((metric, index) => (
+                  <Card key={index}>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-oaia-gray">{metric.title}</p>
+                          <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+                          <p className="text-sm text-oaia-gray mt-1">{metric.description}</p>
+                        </div>
+                        <div className={`p-3 rounded-lg ${metric.bgColor}`}>
+                          <metric.icon className={`h-6 w-6 ${metric.color}`} />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Performance Trends */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="text-lg text-oaia-blue flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2" />
+                    Performance Trends
+                  </CardTitle>
+                  <CardDescription>
+                    Key performance indicators and trends over time
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-gray-900">Budget Utilization Trend</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>January 2024</span>
+                          <span className="font-medium">65%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="bg-oaia-blue h-2 rounded-full" style={{width: '65%'}}></div>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>December 2023</span>
+                          <span className="font-medium">58%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="bg-oaia-blue h-2 rounded-full" style={{width: '58%'}}></div>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>November 2023</span>
+                          <span className="font-medium">52%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="bg-oaia-blue h-2 rounded-full" style={{width: '52%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-gray-900">Processing Efficiency</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                          <div>
+                            <p className="text-sm font-medium text-green-800">Average Processing Time</p>
+                            <p className="text-lg font-bold text-green-900">3.2 days</p>
+                          </div>
+                          <div className="text-green-600">
+                            <TrendingUp className="h-5 w-5" />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                          <div>
+                            <p className="text-sm font-medium text-blue-800">Approval Rate</p>
+                            <p className="text-lg font-bold text-blue-900">94%</p>
+                          </div>
+                          <div className="text-blue-600">
+                            <Target className="h-5 w-5" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
           )}
         </div>
       </div>

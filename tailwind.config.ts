@@ -26,11 +26,11 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#1E40AF',
+					DEFAULT: '#003366',
 					foreground: '#FFFFFF'
 				},
 				secondary: {
-					DEFAULT: '#EA580C',
+					DEFAULT: '#FF6B35',
 					foreground: '#FFFFFF'
 				},
 				success: {
@@ -72,11 +72,14 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				oaia: {
-					blue: '#1E40AF',
-					orange: '#EA580C',
-					green: '#059669',
-					gray: '#6B7280',
-					light: '#F3F4F6'
+					blue: '#003366',
+					orange: '#FF6B35',
+					green: '#28A745',
+					gray: '#495057',
+					light: '#F8F9FA',
+					primary: '#003366',
+					secondary: '#FF6B35',
+					accent: '#28A745'
 				}
 			},
 			borderRadius: {

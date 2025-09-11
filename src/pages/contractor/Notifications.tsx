@@ -46,9 +46,9 @@ const Notifications = () => {
     {
       id: 4,
       type: "success",
-      title: "Payment Received",
+      title: "Advance Payment Received",
       message:
-        "Payment of GHS 175,000 has been successfully transferred to your account for invoice INV004.",
+        "Advance payment of GHS 175,000 has been successfully transferred to your account for invoice INV004.",
       time: "3 days ago",
       read: true,
       invoiceId: "INV004",

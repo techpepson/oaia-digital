@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,20 @@ import { toast } from 'sonner';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
-  const userType = searchParams.get('type') || 'contractor';
+  const location = useLocation();
+  
+  // Determine user type from URL path or query parameter
+  const getUserTypeFromPath = () => {
+    const path = location.pathname;
+    if (path.includes('/agency/')) return 'agency';
+    if (path === '/mof') return 'ministry';
+    if (path === '/ag') return 'auditor';
+    if (path === '/oa') return 'auditor'; // OA team uses auditor dashboard
+    return searchParams.get('type') || 'contractor';
+  };
+  
+  const userType = getUserTypeFromPath();
+  const agencyParam = searchParams.get('agency');
   
   const [formData, setFormData] = useState({
     email: '',
@@ -37,11 +50,25 @@ const Login = () => {
   const getUserTypeLabel = (type: string) => {
     switch (type) {
       case 'contractor': return 'Contractor';
-      case 'agency': return 'Government Agency';
+      case 'agency': return agencyParam ? getAgencyName(agencyParam) : 'Government Agency';
       case 'ministry': return 'Ministry of Finance';
       case 'auditor': return 'Auditor General';
       default: return 'User';
     }
+  };
+
+  const getAgencyName = (agencyId: string) => {
+    const agencies: { [key: string]: string } = {
+      'getfund': 'Ghana Education Trust Fund (GETFund)',
+      'nhis': 'National Health Insurance Scheme (NHIS)',
+      'roadfund': 'Road Fund',
+      'ministry-health': 'Ministry of Health',
+      'ministry-education': 'Ministry of Education',
+      'ministry-transport': 'Ministry of Transport',
+      'ministry-works': 'Ministry of Works and Housing',
+      'ministry-water': 'Ministry of Water Resources'
+    };
+    return agencies[agencyId] || 'Government Agency';
   };
 
   return (
@@ -95,13 +122,24 @@ const Login = () => {
               </Button>
             </form>
             
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center space-y-3">
               <p className="text-sm text-oaia-gray">
-                Don't have an account?{' '}
-                <Link to={`/signup?type=${userType}`} className="text-oaia-blue hover:text-oaia-orange font-medium">
-                  Sign up
-                </Link>
+                Forgot your password?{' '}
+                <button 
+                  onClick={() => toast.info('Password reset link will be sent to your email')}
+                  className="text-oaia-blue hover:text-oaia-orange font-medium"
+                >
+                  Reset Password
+                </button>
               </p>
+              {userType === 'agency' && (
+                <p className="text-sm text-oaia-gray">
+                  Different agency?{' '}
+                  <Link to="/agency-selection" className="text-oaia-blue hover:text-oaia-orange font-medium">
+                    Select Agency
+                  </Link>
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
