@@ -18,13 +18,7 @@ import {
   Eye, 
   Download,
   AlertTriangle,
-  Calendar,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  ChevronDown,
-  ChevronRight,
-  FolderOpen
+  Calendar
 } from 'lucide-react';
 
 const PendingInvoices = () => {
@@ -32,25 +26,6 @@ const PendingInvoices = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [contractorFilter, setContractorFilter] = useState('all');
-  const [sortField, setSortField] = useState('');
-  const [sortDirection, setSortDirection] = useState('asc');
-  const [expandedProjects, setExpandedProjects] = useState<string[]>([]);
-
-  const handleSort = (field: string) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
-  const getSortIcon = (field: string) => {
-    if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
-    return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
-  };
-
-
 
   const pendingInvoices = [
     {
@@ -175,14 +150,38 @@ const PendingInvoices = () => {
     }
   };
 
+  const handleView = (invoiceId: string) => {
+    setViewedInvoices(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(invoiceId)) {
+        newSet.delete(invoiceId);
+      } else {
+        newSet.add(invoiceId);
+      }
+      return newSet;
+    });
+  };
+
   const handleApprove = (invoiceId: string) => {
     console.log(`Approving invoice ${invoiceId}`);
     // Handle approval logic
+    // Close the view after approval
+    setViewedInvoices(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(invoiceId);
+      return newSet;
+    });
   };
 
   const handleReject = (invoiceId: string) => {
     console.log(`Rejecting invoice ${invoiceId}`);
     // Handle rejection logic
+    // Close the view after rejection
+    setViewedInvoices(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(invoiceId);
+      return newSet;
+    });
   };
 
 
@@ -261,170 +260,89 @@ const PendingInvoices = () => {
                   Apply Filters
                 </Button>
               </div>
+            </CardContent>
+          </Card>
 
-          {/* Project-Grouped Invoices */}
-          <div className="space-y-6">
-            {Object.values(groupedInvoices).map((projectGroup) => {
-              const stats = getProjectStats(projectGroup.invoices);
-              const isExpanded = expandedProjects.includes(projectGroup.projectId);
-              
-              return (
-                <Card key={projectGroup.projectId} className="overflow-hidden">
-                  <CardHeader 
-                    className="cursor-pointer hover:bg-gray-50 transition-colors"
-                    onClick={() => toggleProject(projectGroup.projectId)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        {isExpanded ? (
-                          <ChevronDown className="h-5 w-5 text-oaia-blue" />
-                        ) : (
-                          <ChevronRight className="h-5 w-5 text-oaia-blue" />
-                        )}
-                        <FolderOpen className="h-5 w-5 text-oaia-orange" />
-                        <div>
-                          <CardTitle className="text-lg text-oaia-blue">
-                            {projectGroup.project}
-                          </CardTitle>
-                          <CardDescription className="text-sm">
-                            Project ID: {projectGroup.projectId}
-                          </CardDescription>
+          {/* Invoices Table */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl text-oaia-blue flex items-center">
+                <AlertTriangle className="h-5 w-5 mr-2 text-orange-500" />
+                Pending Invoices ({pendingInvoices.length})
+              </CardTitle>
+              <CardDescription>
+                Review and approve contractor invoices awaiting your attention
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Invoice ID</TableHead>
+                    <TableHead>Contractor</TableHead>
+                    <TableHead>Service</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Contract</TableHead>
+                    <TableHead>Priority</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Due Date</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendingInvoices.map((invoice) => (
+                    <TableRow key={invoice.id}>
+                      <TableCell className="font-medium">{invoice.id}</TableCell>
+                      <TableCell>{invoice.contractor}</TableCell>
+                      <TableCell>{invoice.service}</TableCell>
+                      <TableCell>
+                        {invoice.currency} {invoice.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell>{invoice.contract}</TableCell>
+                      <TableCell>
+                        <Badge className={getPriorityColor(invoice.priority)}>
+                          {invoice.priority.toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(invoice.status)}>
+                          {invoice.status.replace('_', ' ').toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center text-sm text-oaia-gray">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          {invoice.dueDate}
                         </div>
-                      </div>
-                      <div className="flex items-center space-x-6 text-sm">
-                        <div className="text-center">
-                          <div className="font-semibold text-oaia-blue">{stats.totalCount}</div>
-                          <div className="text-oaia-gray">Invoices</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            className="bg-oaia-green hover:bg-oaia-green/90"
+                            onClick={() => handleApprove(invoice.id)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Approve
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="destructive"
+                            onClick={() => handleReject(invoice.id)}
+                          >
+                            <XCircle className="h-4 w-4 mr-1" />
+                            Reject
+                          </Button>
                         </div>
-                        <div className="text-center">
-                          <div className="font-semibold text-green-600">
-                            GHS {stats.totalAmount.toLocaleString()}
-                          </div>
-                          <div className="text-oaia-gray">Total Value</div>
-                        </div>
-                        {stats.urgentCount > 0 && (
-                          <div className="text-center">
-                            <div className="font-semibold text-red-600">{stats.urgentCount}</div>
-                            <div className="text-oaia-gray">Urgent</div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  {isExpanded && (
-                    <CardContent className="pt-0">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('id')} className="p-0 h-auto font-medium">
-                                Invoice ID {getSortIcon('id')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('contractor')} className="p-0 h-auto font-medium">
-                                Contractor {getSortIcon('contractor')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('service')} className="p-0 h-auto font-medium">
-                                Service {getSortIcon('service')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('amount')} className="p-0 h-auto font-medium">
-                                Amount {getSortIcon('amount')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('contract')} className="p-0 h-auto font-medium">
-                                Contract {getSortIcon('contract')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('priority')} className="p-0 h-auto font-medium">
-                                Priority {getSortIcon('priority')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('status')} className="p-0 h-auto font-medium">
-                                Status {getSortIcon('status')}
-                              </Button>
-                            </TableHead>
-                            <TableHead>
-                              <Button variant="ghost" onClick={() => handleSort('dueDate')} className="p-0 h-auto font-medium">
-                                Due Date {getSortIcon('dueDate')}
-                              </Button>
-                            </TableHead>
-                             <TableHead>Actions</TableHead>
-                           </TableRow>
-                         </TableHeader>
-                         <TableBody>
-                           {projectGroup.invoices.map((invoice) => (
-                             <TableRow key={invoice.id} className="hover:bg-gray-50">
-                               <TableCell className="font-medium">{invoice.id}</TableCell>
-                               <TableCell>{invoice.contractor}</TableCell>
-                               <TableCell>{invoice.service}</TableCell>
-                               <TableCell className="font-semibold text-green-600">
-                                 GHS {invoice.amount.toLocaleString()}
-                               </TableCell>
-                               <TableCell>{invoice.contract}</TableCell>
-                               <TableCell>
-                                 <Badge 
-                                   variant="outline" 
-                                   className={`${getPriorityColor(invoice.priority)} border-current`}
-                                 >
-                                   {invoice.priority}
-                                 </Badge>
-                               </TableCell>
-                               <TableCell>
-                                 <Badge 
-                                   variant="outline" 
-                                   className={`${getStatusColor(invoice.status)} border-current`}
-                                 >
-                                   {invoice.status}
-                                 </Badge>
-                               </TableCell>
-                               <TableCell className="text-sm text-oaia-gray">
-                                 {invoice.dueDate}
-                               </TableCell>
-                               <TableCell>
-                                 <div className="flex space-x-2">
-                                   <Button 
-                                     size="sm" 
-                                     variant="outline" 
-                                     className="text-oaia-blue border-oaia-blue hover:bg-oaia-blue hover:text-white"
-                                   >
-                                     Review
-                                   </Button>
-                                   <Button 
-                                     size="sm" 
-                                     className="bg-green-600 hover:bg-green-700 text-white"
-                                     onClick={() => handleApprove(invoice.id)}
-                                   >
-                                     Approve
-                                   </Button>
-                                   <Button 
-                                     size="sm" 
-                                     variant="outline" 
-                                     className="text-red-600 border-red-600 hover:bg-red-600 hover:text-white"
-                                     onClick={() => handleReject(invoice.id)}
-                                   >
-                                     Reject
-                                   </Button>
-                                 </div>
-                               </TableCell>
-                             </TableRow>
-                           ))}
-                         </TableBody>
-                       </Table>
-                     </CardContent>
-                   )}
-                 </Card>
-               );
-             })}
-           </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </div>
