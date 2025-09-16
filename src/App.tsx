@@ -55,7 +55,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/agency-selection" element={<AgencySelection />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           {/* Custom URLs for different agency types */}
           <Route path="/agency/getfund" element={<Login />} />
           <Route path="/agency/nhis" element={<Login />} />

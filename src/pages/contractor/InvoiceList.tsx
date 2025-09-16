@@ -110,9 +110,15 @@ const InvoiceList = () => {
   };
 
   const filteredInvoices = invoices.filter((invoice) => {
+    const term = searchTerm.toLowerCase();
     const matchesSearch =
-      invoice.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.contract.toLowerCase().includes(searchTerm.toLowerCase());
+      invoice.id.toLowerCase().includes(term) ||
+      invoice.contract.toLowerCase().includes(term) ||
+      invoice.agency.toLowerCase().includes(term) ||
+      invoice.amount.toLowerCase().includes(term) ||
+      invoice.advance.toLowerCase().includes(term) ||
+      invoice.date.toLowerCase().includes(term) ||
+      invoice.status.toLowerCase().includes(term);
     const matchesStatus =
       statusFilter === "all" || invoice.status === statusFilter;
     const matchesAgency =
@@ -222,7 +228,7 @@ const InvoiceList = () => {
                 <div className="flex items-center space-x-2">
                   <Search className="h-4 w-4 text-oaia-gray" />
                   <Input
-                    placeholder="Search by contract name..."
+                    placeholder="Search invoices (any field)..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-64"

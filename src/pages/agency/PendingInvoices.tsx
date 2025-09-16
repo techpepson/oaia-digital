@@ -26,6 +26,8 @@ const PendingInvoices = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [contractorFilter, setContractorFilter] = useState('all');
+  const [expandedProjects, setExpandedProjects] = useState<string[]>([]);
+  const [viewedInvoices, setViewedInvoices] = useState<Set<string>>(new Set());
 
   const pendingInvoices = [
     {
@@ -317,26 +319,30 @@ const PendingInvoices = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={() => handleView(invoice.id)}>
                             <Eye className="h-4 w-4 mr-1" />
                             View
                           </Button>
-                          <Button 
-                            size="sm" 
-                            className="bg-oaia-green hover:bg-oaia-green/90"
-                            onClick={() => handleApprove(invoice.id)}
-                          >
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            Approve
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="destructive"
-                            onClick={() => handleReject(invoice.id)}
-                          >
-                            <XCircle className="h-4 w-4 mr-1" />
-                            Reject
-                          </Button>
+                          {viewedInvoices.has(invoice.id) && (
+                            <>
+                              <Button 
+                                size="sm" 
+                                className="bg-oaia-green hover:bg-oaia-green/90"
+                                onClick={() => handleApprove(invoice.id)}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-1" />
+                                Approve
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={() => handleReject(invoice.id)}
+                              >
+                                <XCircle className="h-4 w-4 mr-1" />
+                                Reject
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

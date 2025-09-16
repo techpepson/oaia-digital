@@ -144,8 +144,14 @@ const Login = () => {
           </CardContent>
         </Card>
 
-        {/* Security Notice */}
-        <div className="mt-6 text-center">
+        {/* Footer */}
+        <div className="mt-6 text-center space-y-3">
+          <p className="text-sm text-oaia-gray">
+            New contractor?{' '}
+            <Link to="/signup?type=contractor" className="text-oaia-blue hover:text-oaia-orange font-medium">
+              Create an account
+            </Link>
+          </p>
           <p className="text-xs text-oaia-gray">
             Protected by bank-grade security. Your data is safe with us.
           </p>

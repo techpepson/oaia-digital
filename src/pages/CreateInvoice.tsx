@@ -30,6 +30,7 @@ const CreateInvoice = () => {
   const [advanceAmount, setAdvanceAmount] = useState<number>(0);
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
   const [selectedBankAccounts, setSelectedBankAccounts] = useState<string[]>([]);
+  const [selectedBankAccount, setSelectedBankAccount] = useState<string | null>(null);
   const [isAddingBankAccount, setIsAddingBankAccount] = useState(false);
   const [newBankAccount, setNewBankAccount] = useState<Omit<BankAccount, 'id'>>({ 
     accountName: '',

@@ -46,9 +46,11 @@ const BankDetails = () => {
     // Here you would typically save the bank details to your backend
     console.log('Bank details submitted:', formData);
     
-    toast.success('Bank details saved successfully!');
+    toast.success('Bank account saved', {
+      description: `${formData.bankName.toUpperCase()} ••••${formData.accountNumber.slice(-4)} set for payments`,
+    });
     // Navigate to dashboard or next step
-    navigate('/dashboard/contractor?onboarding=true');
+    setTimeout(() => navigate('/dashboard/contractor?onboarding=true'), 1200);
   };
 
   return (
