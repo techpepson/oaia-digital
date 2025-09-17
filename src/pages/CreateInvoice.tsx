@@ -18,6 +18,7 @@ interface BankAccount {
   bankName: string;
   branch: string;
   currency: string;
+  DOB: string;
   isDefault: boolean;
 }
 
@@ -38,6 +39,7 @@ const CreateInvoice = () => {
     bankName: '',
     branch: '',
     currency: 'GHS',
+    DOB: '',
     isDefault: false
   });
 
@@ -152,6 +154,7 @@ const CreateInvoice = () => {
       bankName: '',
       branch: '',
       currency: 'GHS',
+      DOB: '',
       isDefault: false 
     });
     toast.success("Bank account added successfully");
@@ -399,7 +402,7 @@ const CreateInvoice = () => {
                                     />
                                   </div>
                                   <div className="space-y-2">
-                                    <Label htmlFor="bankName">Bank Name *</Label>
+                                    <Label htmlFor="bankName">Bank Nam *</Label>
                                     <Input
                                       id="bankName"
                                       value={newBankAccount.bankName}
