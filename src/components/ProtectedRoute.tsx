@@ -1,3 +1,4 @@
+// OAIA Digital - Protected Route Component
 import { Navigate, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {

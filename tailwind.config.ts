@@ -1,4 +1,5 @@
 
+// OAIA Digital - Tailwind CSS Configuration
 import type { Config } from "tailwindcss";
 
 export default {

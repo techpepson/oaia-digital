@@ -1,3 +1,4 @@
+// OAIA Digital - 404 Not Found Page
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 

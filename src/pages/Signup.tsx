@@ -1,3 +1,4 @@
+// OAIA Digital - User Registration Page
 import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';

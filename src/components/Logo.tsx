@@ -1,4 +1,5 @@
 
+// OAIA Digital - Logo Component
 import React from 'react';
 
 interface LogoProps {
